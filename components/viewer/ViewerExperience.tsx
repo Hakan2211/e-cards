@@ -36,10 +36,10 @@ export function ViewerExperience({ card, onOpen }: ViewerExperienceProps) {
 
   const occasionData = OCCASIONS.find((o) => o.slug === card.occasion);
   const colorScheme = occasionData?.colorScheme || {
-    primary: "#6366f1",
-    secondary: "#f3f4f6",
-    accent: "#f59e0b",
-    background: "#ffffff",
+    primary: "#C9A96E",
+    secondary: "#F5F0E8",
+    accent: "#C9A96E",
+    background: "#FDFBF7",
   };
   const particleType =
     card.particleEffect || occasionData?.defaultParticles || "confetti";
@@ -132,7 +132,7 @@ export function ViewerExperience({ card, onOpen }: ViewerExperienceProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6"
+                className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-[#E8E0D4]/40"
               >
                 <MessageDisplay
                   recipientName={card.recipientName}

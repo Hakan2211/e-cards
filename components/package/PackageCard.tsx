@@ -27,19 +27,19 @@ export function PackageCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onSelect(packageKey)}
       className={cn(
-        "relative rounded-xl border-2 p-6 cursor-pointer transition-all",
+        "relative rounded-xl border-2 p-6 cursor-pointer transition-all duration-200 bg-card",
         isSelected
-          ? "border-primary bg-primary/5 shadow-lg"
-          : "border-border hover:border-primary/30 hover:shadow-md",
-        isBestValue && "ring-2 ring-accent/50"
+          ? "border-accent shadow-md"
+          : "border-border hover:border-accent/30 hover:shadow-sm",
+        isBestValue && "ring-1 ring-accent/30"
       )}
     >
       {isBestValue && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground text-xs font-semibold px-3 py-1 rounded-full tracking-wide">
           Best Value
         </div>
       )}
@@ -51,23 +51,28 @@ export function PackageCard({
         </div>
         <div
           className={cn(
-            "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ml-3",
-            isSelected ? "border-primary bg-primary" : "border-border"
+            "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ml-3 transition-colors",
+            isSelected ? "border-accent bg-accent" : "border-border"
           )}
         >
-          {isSelected && <Check className="w-4 h-4 text-white" />}
+          {isSelected && <Check className="w-4 h-4 text-accent-foreground" />}
         </div>
       </div>
 
       <div className="mb-4">
-        <span className="text-3xl font-bold">{pkg.priceDisplay}</span>
-        <span className="text-muted-foreground text-sm ml-1">one-time</span>
+        <span
+          className="text-3xl font-bold"
+          style={{ fontFamily: "var(--font-heading), 'Playfair Display', Georgia, serif" }}
+        >
+          {pkg.priceDisplay}
+        </span>
+        <span className="text-muted-foreground text-sm ml-1.5">one-time</span>
       </div>
 
       <ul className="space-y-2">
         {pkg.features.map((feature) => (
           <li key={feature} className="flex items-center gap-2 text-sm">
-            <Check className="w-4 h-4 text-primary flex-shrink-0" />
+            <Check className="w-4 h-4 text-accent flex-shrink-0" />
             <span>{feature}</span>
           </li>
         ))}

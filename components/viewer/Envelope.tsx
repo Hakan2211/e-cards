@@ -34,25 +34,25 @@ export function Envelope({ recipientName, onOpen, colorScheme }: EnvelopeProps) 
         {/* Envelope body */}
         <div
           className="absolute inset-0 rounded-2xl shadow-2xl overflow-hidden"
-          style={{ backgroundColor: colorScheme.primary + "22" }}
+          style={{ backgroundColor: colorScheme.primary + "15" }}
         >
           {/* Envelope flap (triangle) */}
           <div
             className="absolute top-0 left-0 right-0 h-1/2"
             style={{
-              background: `linear-gradient(135deg, ${colorScheme.primary}33 25%, transparent 25%), 
-                           linear-gradient(225deg, ${colorScheme.primary}33 25%, transparent 25%)`,
+              background: `linear-gradient(135deg, ${colorScheme.primary}22 25%, transparent 25%), 
+                           linear-gradient(225deg, ${colorScheme.primary}22 25%, transparent 25%)`,
               backgroundSize: "50% 100%",
               backgroundPosition: "left top, right top",
               backgroundRepeat: "no-repeat",
             }}
           />
 
-          {/* Envelope center seal */}
+          {/* Envelope center seal — gold accent */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
             <motion.div
               className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
-              style={{ backgroundColor: colorScheme.primary }}
+              style={{ backgroundColor: "#C9A96E" }}
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -63,14 +63,20 @@ export function Envelope({ recipientName, onOpen, colorScheme }: EnvelopeProps) 
           {/* Recipient name */}
           <div className="absolute bottom-8 left-0 right-0 text-center">
             <p
-              className="text-lg font-medium opacity-80"
-              style={{ color: colorScheme.primary }}
+              className="text-sm font-medium tracking-wide uppercase opacity-60"
+              style={{
+                color: colorScheme.primary,
+                fontFamily: "var(--font-sans), sans-serif",
+              }}
             >
-              To:
+              To
             </p>
             <p
-              className="text-2xl font-bold"
-              style={{ color: colorScheme.primary }}
+              className="text-2xl font-bold mt-1"
+              style={{
+                color: colorScheme.primary,
+                fontFamily: "var(--font-heading), 'Playfair Display', Georgia, serif",
+              }}
             >
               {recipientName || "You"}
             </p>
@@ -80,10 +86,13 @@ export function Envelope({ recipientName, onOpen, colorScheme }: EnvelopeProps) 
 
       {/* Tap to open */}
       <motion.p
-        className="mt-8 text-lg font-medium animate-pulse-soft"
-        style={{ color: colorScheme.primary }}
+        className="mt-10 text-base font-medium tracking-wide animate-pulse-soft"
+        style={{
+          color: colorScheme.primary,
+          fontFamily: "var(--font-sans), sans-serif",
+        }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: 0.7 }}
         transition={{ delay: 1 }}
       >
         Tap to open

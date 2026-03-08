@@ -22,7 +22,7 @@ export function Watermark({ show }: WatermarkProps) {
       </p>
       <a
         href="/"
-        className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+        className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent/80 hover:underline transition-colors"
       >
         Create a card for your loved ones
       </a>

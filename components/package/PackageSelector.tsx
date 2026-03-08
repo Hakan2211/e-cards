@@ -60,11 +60,11 @@ export function PackageSelector() {
             Back
           </button>
           <Logo size="sm" />
-          <div className="w-16" /> {/* Spacer */}
+          <div className="w-16" />
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-4xl mx-auto px-4 py-10">
         {/* Occasion Badge */}
         {occasionData && (
           <motion.div
@@ -72,7 +72,7 @@ export function PackageSelector() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted text-sm font-medium">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm font-medium border border-border">
               <span className="text-xl">{occasionData.icon}</span>
               {occasionData.name}
             </span>
@@ -86,7 +86,7 @@ export function PackageSelector() {
         >
           Choose Your Package
         </motion.h1>
-        <p className="text-center text-muted-foreground mb-8">
+        <p className="text-center text-muted-foreground mb-10">
           Select what you want to include in your card
         </p>
 
@@ -125,7 +125,7 @@ export function PackageSelector() {
             onClick={handleCheckout}
             disabled={isLoading}
             size="lg"
-            className="w-full text-lg h-14 rounded-xl shadow-lg"
+            className="w-full text-lg h-14 rounded-xl shadow-md"
           >
             {isLoading ? (
               <>
@@ -134,7 +134,7 @@ export function PackageSelector() {
               </>
             ) : (
               <>
-                Continue to Payment - {PACKAGES[selectedPackage].priceDisplay}
+                Continue to Payment &mdash; {PACKAGES[selectedPackage].priceDisplay}
               </>
             )}
           </Button>

@@ -258,10 +258,10 @@ export function ImageGenerator({
       <div className="flex rounded-lg border border-border overflow-hidden">
         <button
           onClick={() => setActiveTab("upload")}
-          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all ${
             activeTab === "upload"
-              ? "bg-primary text-primary-foreground"
-              : "bg-background text-muted-foreground hover:bg-muted"
+              ? "bg-accent/15 text-accent border-b-2 border-accent"
+              : "bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
           <Upload className="w-4 h-4" />
@@ -269,10 +269,10 @@ export function ImageGenerator({
         </button>
         <button
           onClick={() => setActiveTab("examples")}
-          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all ${
             activeTab === "examples"
-              ? "bg-primary text-primary-foreground"
-              : "bg-background text-muted-foreground hover:bg-muted"
+              ? "bg-accent/15 text-accent border-b-2 border-accent"
+              : "bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
           <Palette className="w-4 h-4" />
@@ -297,7 +297,7 @@ export function ImageGenerator({
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors"
+                className=                "border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-accent/50 hover:bg-accent/5 transition-colors"
               >
                 <input
                   ref={fileInputRef}
@@ -307,8 +307,8 @@ export function ImageGenerator({
                   className="hidden"
                 />
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                    <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                    <ImageIcon className="w-6 h-6 text-accent" />
                   </div>
                   <div>
                     <p className="text-sm font-medium">
@@ -356,8 +356,8 @@ export function ImageGenerator({
                       disabled={style.id !== "original" && isDisabled}
                       className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-all text-center ${
                         selectedStyle?.id === style.id
-                          ? "border-primary bg-primary/5 shadow-sm"
-                          : "border-border hover:border-primary/30 hover:bg-muted/30"
+                          ? "border-accent bg-accent/10 shadow-sm"
+                          : "border-border hover:border-accent/30 hover:bg-muted/30"
                       } disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       <span className="text-2xl">{style.icon}</span>
@@ -424,8 +424,8 @@ export function ImageGenerator({
                   disabled={isDisabled}
                   className={`group relative rounded-xl border-2 overflow-hidden transition-all ${
                     selectedExample?.id === example.id && isGenerating
-                      ? "border-primary ring-2 ring-primary/20"
-                      : "border-border hover:border-primary/40"
+                      ? "border-accent ring-2 ring-accent/20"
+                      : "border-border hover:border-accent/40"
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {/* Thumbnail with fallback */}
@@ -438,7 +438,7 @@ export function ImageGenerator({
                         // Fallback to a colored placeholder with the occasion icon
                         const target = e.target as HTMLImageElement;
                         const occasionInfo = occasionData;
-                        const bg = occasionInfo?.colorScheme.primary || "#6366f1";
+                        const bg = occasionInfo?.colorScheme.primary || "#C9A96E";
                         target.src = `https://placehold.co/400x300/${bg.slice(1)}/white?text=${encodeURIComponent(example.label)}&font=playfair-display`;
                       }}
                     />
@@ -498,7 +498,7 @@ export function ImageGenerator({
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
                   placeholder="Describe the image you want for your card..."
-                  className="w-full h-20 px-3 py-2 rounded-lg border border-border bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full h-20 px-3 py-2 rounded-lg border border-border bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent/50"
                 />
 
                 {/* Quick suggestion pills from occasion data */}
@@ -516,7 +516,7 @@ export function ImageGenerator({
                               setCustomPrompt(suggestion);
                             }}
                             disabled={isDisabled}
-                            className="text-[11px] px-2.5 py-1 rounded-full border border-border hover:bg-muted transition-colors disabled:opacity-50"
+                            className="text-[11px] px-2.5 py-1 rounded-full border border-border hover:bg-accent/10 hover:border-accent/30 transition-colors disabled:opacity-50"
                           >
                             {suggestion.slice(0, 40)}...
                           </button>
@@ -557,7 +557,7 @@ export function ImageGenerator({
           remaining
         </span>
         {imageUrl && (
-          <span className="flex items-center gap-1 text-green-600">
+          <span className="flex items-center gap-1 text-accent">
             <RefreshCw className="w-3 h-3" />
             Image ready
           </span>

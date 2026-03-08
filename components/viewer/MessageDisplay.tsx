@@ -19,7 +19,7 @@ export function MessageDisplay({
   return (
     <div className="text-center py-8 px-4">
       <motion.p
-        className="text-lg font-medium text-foreground/80 mb-4"
+        className="text-xl font-heading italic text-foreground/80 mb-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
@@ -45,14 +45,14 @@ export function MessageDisplay({
       </div>
 
       <motion.p
-        className="text-base font-medium text-foreground/80"
+        className="text-base font-heading italic text-foreground/80"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 + words.length * 0.08 + 0.5 }}
       >
         With love,
         <br />
-        <span className="text-lg font-semibold">{senderName}</span>
+        <span className="text-lg font-heading font-semibold not-italic">{senderName}</span>
       </motion.p>
     </div>
   );

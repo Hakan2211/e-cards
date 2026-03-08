@@ -196,7 +196,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
   if (card === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <Loader2 className="w-8 h-8 animate-spin text-accent" />
       </div>
     );
   }
@@ -216,7 +216,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
   if (!card.isPaid) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <Loader2 className="w-8 h-8 animate-spin text-primary mb-4" />
+        <Loader2 className="w-8 h-8 animate-spin text-accent mb-4" />
         <p className="text-muted-foreground">Waiting for payment confirmation...</p>
       </div>
     );
@@ -244,16 +244,18 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
               <button
                 key={step.key}
                 onClick={() => setCurrentStep(step.key)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                   currentStep === step.key
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-accent/15 text-accent border border-accent/30"
+                    : index < currentStepIndex
+                    ? "text-foreground/70 hover:bg-muted"
                     : "text-muted-foreground hover:bg-muted"
                 }`}
               >
                 {step.icon}
                 {step.label}
                 {index < currentStepIndex && (
-                  <Check className="w-3 h-3" />
+                  <Check className="w-3 h-3 text-accent" />
                 )}
               </button>
             ))}
@@ -273,7 +275,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
           >
             {currentStep === "image" && (
               <div>
-                <h2 className="text-xl font-bold mb-1">Create Your Card Image</h2>
+                <h2 className="text-xl font-heading font-bold mb-1">Create Your Card Image</h2>
                 <p className="text-sm text-muted-foreground mb-4">
                   Upload your own photo or pick from our designs
                 </p>
@@ -290,7 +292,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
 
             {currentStep === "message" && (
               <div>
-                <h2 className="text-xl font-bold mb-1">Write Your Message</h2>
+                <h2 className="text-xl font-heading font-bold mb-1">Write Your Message</h2>
                 <p className="text-sm text-muted-foreground mb-4">
                   Add the recipient and sender names, and write your heartfelt message
                 </p>
@@ -305,7 +307,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
 
             {currentStep === "voice" && (
               <div>
-                <h2 className="text-xl font-bold mb-1">Record Your Voice</h2>
+                <h2 className="text-xl font-heading font-bold mb-1">Record Your Voice</h2>
                 <p className="text-sm text-muted-foreground mb-4">
                   Record a personal voice message that plays when the card is opened
                 </p>
@@ -318,7 +320,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
 
             {currentStep === "music" && (
               <div>
-                <h2 className="text-xl font-bold mb-1">Generate Music</h2>
+                <h2 className="text-xl font-heading font-bold mb-1">Generate Music</h2>
                 <p className="text-sm text-muted-foreground mb-4">
                   Create custom AI-generated music that plays in the background
                 </p>
@@ -333,13 +335,13 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
 
             {currentStep === "preview" && (
               <div>
-                <h2 className="text-xl font-bold mb-1">Preview Your Card</h2>
+                <h2 className="text-xl font-heading font-bold mb-1">Preview Your Card</h2>
                 <p className="text-sm text-muted-foreground mb-4">
                   This is what your recipient will see
                 </p>
 
                 {/* Mini preview */}
-                <div className="rounded-xl border border-border overflow-hidden mb-6">
+                <div className="rounded-xl border border-border overflow-hidden mb-6 bg-card shadow-sm">
                   {localImageUrl && (
                     <img
                       src={localImageUrl}
@@ -348,14 +350,14 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
                     />
                   )}
                   <div className="p-6 text-center">
-                    <p className="text-lg font-medium mb-2">
+                    <p className="text-lg font-heading italic text-foreground/80 mb-2">
                       Dear {card.recipientName || "___"},
                     </p>
                     <p className="text-muted-foreground whitespace-pre-wrap">
                       {card.messageText || "Your message will appear here..."}
                     </p>
-                    <p className="mt-4 text-sm text-muted-foreground">
-                      With love, {card.senderName || "___"}
+                    <p className="mt-4 text-sm font-heading italic text-muted-foreground">
+                      With love, <span className="not-italic font-semibold">{card.senderName || "___"}</span>
                     </p>
                   </div>
                 </div>
