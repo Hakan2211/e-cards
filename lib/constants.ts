@@ -1395,7 +1395,6 @@ export const PACKAGES: Record<PackageKey, PackageInfo> = {
 } as const;
 
 export const MAX_IMAGE_REGENERATIONS = 3;
-export const CARD_EXPIRY_DAYS = 7;
 
 export interface OccasionInfo {
   name: string;

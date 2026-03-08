@@ -23,7 +23,7 @@ import {
   ArrowLeft,
   Loader2,
 } from "lucide-react";
-import { daysRemaining } from "@/lib/utils";
+
 
 interface StudioLayoutProps {
   slug: string;
@@ -238,11 +238,6 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
               <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-xs font-medium border border-border">
                 <span>{occasionData.icon}</span>
                 {displayOccasionName}
-              </span>
-            )}
-            {card.expiresAt && (
-              <span className="text-xs text-muted-foreground">
-                {daysRemaining(card.expiresAt)} days left
               </span>
             )}
           </div>

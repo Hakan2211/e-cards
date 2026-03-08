@@ -38,13 +38,13 @@ export default function CardViewPage({
     );
   }
 
-  if (card === null || card.status !== "ready") {
+  if (card === null || card.status === "pending_payment") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <Logo size="md" className="mb-4" />
         <h1 className="text-2xl font-bold mb-2">Card Not Found</h1>
         <p className="text-muted-foreground text-center">
-          This card doesn&apos;t exist, isn&apos;t ready yet, or has expired.
+          This card doesn&apos;t exist or isn&apos;t ready yet.
         </p>
       </div>
     );

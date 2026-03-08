@@ -43,8 +43,3 @@ export function timeAgo(timestamp: number): string {
   return `${days}d ago`;
 }
 
-export function daysRemaining(expiresAt: number): number {
-  const now = Date.now();
-  const diff = expiresAt - now;
-  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-}

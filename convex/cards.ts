@@ -48,13 +48,11 @@ export const markPaid = mutation({
     if (!card) throw new Error("Card not found");
 
     const now = Date.now();
-    const expiresAt = now + 7 * 24 * 60 * 60 * 1000; // 7 days
 
     await ctx.db.patch(card._id, {
       isPaid: true,
       status: "creating",
       paidAt: now,
-      expiresAt,
     });
 
     return card.slug;

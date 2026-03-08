@@ -18,7 +18,7 @@ const faqItems: FAQItem[] = [
   {
     question: "How long does my card last?",
     answer:
-      "Your card is accessible for 7 days after creation. The recipient can view it as many times as they want during that period.",
+      "Your card is available permanently. Once created, the recipient can view it anytime using the share link.",
   },
   {
     question: "Can I change my package after purchase?",
