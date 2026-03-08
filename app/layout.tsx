@@ -33,6 +33,22 @@ export const metadata: Metadata = {
     "e-card",
     "AI greeting card",
   ],
+  metadataBase: new URL("https://cardlar.com"),
+  openGraph: {
+    title: "Cardlar - Personalized Digital Greeting Cards",
+    description:
+      "Create stunning cards with AI-generated images, voice messages, and music.",
+    url: "https://cardlar.com",
+    siteName: "Cardlar",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cardlar - Personalized Digital Greeting Cards",
+    description:
+      "Create stunning cards with AI-generated images, voice messages, and music.",
+  },
 };
 
 export default function RootLayout({

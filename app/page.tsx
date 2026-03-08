@@ -30,7 +30,15 @@ export default function HomePage() {
       <footer className="py-8 px-4 border-t border-border text-center">
         <Logo size="sm" className="mb-2" />
         <p className="text-sm text-muted-foreground">
-          Personalized digital greeting cards powered by AI
+          Personalized digital greeting cards powered by{" "}
+          <a
+            href="https://hakanda.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent/70 hover:text-accent transition-colors"
+          >
+            hakanda.com
+          </a>
         </p>
       </footer>
     </div>
