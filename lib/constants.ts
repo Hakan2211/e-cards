@@ -1394,7 +1394,6 @@ export const PACKAGES: Record<PackageKey, PackageInfo> = {
   },
 } as const;
 
-export const WATERMARK_ADDON_PRICE = 99; // cents - to remove watermark
 export const MAX_IMAGE_REGENERATIONS = 3;
 export const CARD_EXPIRY_DAYS = 7;
 

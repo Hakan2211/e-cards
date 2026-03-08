@@ -10,12 +10,20 @@ export default function HomePage() {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Logo size="sm" />
-          <a
-            href="#occasions"
-            className="inline-flex items-center justify-center h-9 px-4 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
-          >
-            Create Card
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/pricing"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Pricing
+            </a>
+            <a
+              href="#occasions"
+              className="inline-flex items-center justify-center h-9 px-4 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
+            >
+              Create Card
+            </a>
+          </div>
         </div>
       </header>
 

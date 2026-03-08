@@ -62,7 +62,12 @@ export function PackageSelector() {
             Back
           </button>
           <Logo size="sm" />
-          <div className="w-16" />
+          <a
+            href="/pricing"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Pricing
+          </a>
         </div>
       </header>
 
