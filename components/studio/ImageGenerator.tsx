@@ -1,16 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { OCCASIONS, MAX_IMAGE_REGENERATIONS } from "@/lib/constants";
-import { Loader2, RefreshCw, Sparkles } from "lucide-react";
+import {
+  OCCASIONS,
+  OCCASION_STYLES,
+  OCCASION_EXAMPLES,
+  MAX_IMAGE_REGENERATIONS,
+  OccasionKey,
+  StylePreset,
+  ExampleCard,
+} from "@/lib/constants";
+import {
+  Loader2,
+  RefreshCw,
+  Sparkles,
+  Upload,
+  ImageIcon,
+  Palette,
+  ChevronDown,
+  ChevronUp,
+  X,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+type TabKey = "upload" | "examples";
 
 interface ImageGeneratorProps {
   occasion: string;
   imageUrl: string | null;
   imageRegenCount: number;
-  onImageGenerated: (url: string, prompt: string) => void;
+  onImageGenerated: (
+    url: string,
+    prompt: string,
+    meta?: {
+      originalPhotoUrl?: string;
+      imageStyle?: string;
+      skipRegen?: boolean;
+    }
+  ) => void;
+  onPhotoUploaded: (file: File) => Promise<string>;
   slug: string;
 }
 
@@ -19,18 +48,185 @@ export function ImageGenerator({
   imageUrl,
   imageRegenCount,
   onImageGenerated,
+  onPhotoUploaded,
   slug,
 }: ImageGeneratorProps) {
   const occasionData = OCCASIONS.find((o) => o.slug === occasion);
-  const [prompt, setPrompt] = useState("");
+  const ORIGINAL_STYLE: StylePreset = {
+    id: "original",
+    name: "Original",
+    icon: "📷",
+    editPrompt: "",
+    generatePrompt: "",
+  };
+  const styles = [ORIGINAL_STYLE, ...(OCCASION_STYLES[occasion as OccasionKey] || [])];
+  const examples = OCCASION_EXAMPLES[occasion as OccasionKey] || [];
+
+  const [activeTab, setActiveTab] = useState<TabKey>("upload");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const remainingGenerations = MAX_IMAGE_REGENERATIONS - imageRegenCount;
+  // Upload photo state
+  const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
+  const [uploadedPhotoPreview, setUploadedPhotoPreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState<StylePreset | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleGenerate = async (customPrompt?: string) => {
-    const finalPrompt = customPrompt || prompt;
-    if (!finalPrompt.trim()) return;
+  // Example state
+  const [selectedExample, setSelectedExample] = useState<ExampleCard | null>(null);
+
+  // Custom prompt state
+  const [showCustomPrompt, setShowCustomPrompt] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState("");
+
+  const remainingGenerations = MAX_IMAGE_REGENERATIONS - imageRegenCount;
+  const isDisabled = isGenerating || remainingGenerations <= 0;
+
+  // ─── File Upload Handler ────────────────────────────────────────────
+  const handleFileSelect = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        setError("Please select an image file (JPEG, PNG, WebP)");
+        return;
+      }
+
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setError("Image must be less than 10MB");
+        return;
+      }
+
+      setError(null);
+      setIsUploading(true);
+
+      // Create a local preview immediately
+      const previewUrl = URL.createObjectURL(file);
+      setUploadedPhotoPreview(previewUrl);
+
+      try {
+        // Upload to Convex storage and get a public HTTPS URL back
+        // This URL is what fal.ai needs (it must be publicly accessible)
+        const publicUrl = await onPhotoUploaded(file);
+        setUploadedPhotoUrl(publicUrl);
+        setIsUploading(false);
+      } catch {
+        setError("Failed to upload photo. Please try again.");
+        setIsUploading(false);
+        setUploadedPhotoPreview(null);
+      }
+    },
+    [onPhotoUploaded]
+  );
+
+  const handleRemovePhoto = () => {
+    setUploadedPhotoUrl(null);
+    setUploadedPhotoPreview(null);
+    setSelectedStyle(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  // ─── Drop Zone Handler ──────────────────────────────────────────────
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files?.[0];
+      if (file) {
+        // Create a synthetic event to reuse the file handler
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        const syntheticEvent = {
+          target: { files: dt.files },
+        } as unknown as React.ChangeEvent<HTMLInputElement>;
+        handleFileSelect(syntheticEvent);
+      }
+    },
+    [handleFileSelect]
+  );
+
+  // ─── Generate with Style (photo upload path) ───────────────────────
+  const handleApplyStyle = async () => {
+    if (!uploadedPhotoUrl || !selectedStyle) return;
+
+    // "Original" style — use the photo directly, no AI processing
+    if (selectedStyle.id === "original") {
+      onImageGenerated(uploadedPhotoUrl, "original", {
+        originalPhotoUrl: uploadedPhotoUrl,
+        imageStyle: "original",
+        skipRegen: true,
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/edit-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imageUrl: uploadedPhotoUrl,
+          prompt: selectedStyle.editPrompt,
+          slug,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        setError(data.error);
+      } else {
+        onImageGenerated(data.imageUrl, selectedStyle.editPrompt, {
+          originalPhotoUrl: uploadedPhotoUrl,
+          imageStyle: selectedStyle.id,
+        });
+      }
+    } catch {
+      setError("Failed to apply style. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // ─── Generate from Example (pick a design path) ────────────────────
+  const handleGenerateFromExample = async (example: ExampleCard) => {
+    setSelectedExample(example);
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: example.prompt, slug }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        setError(data.error);
+      } else {
+        onImageGenerated(data.imageUrl, example.prompt, {
+          imageStyle: example.id,
+        });
+      }
+    } catch {
+      setError("Failed to generate image. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // ─── Generate from Custom Prompt ────────────────────────────────────
+  const handleCustomGenerate = async () => {
+    if (!customPrompt.trim()) return;
 
     setIsGenerating(true);
     setError(null);
@@ -39,7 +235,7 @@ export function ImageGenerator({
       const response = await fetch("/api/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: finalPrompt, slug }),
+        body: JSON.stringify({ prompt: customPrompt, slug }),
       });
 
       const data = await response.json();
@@ -47,7 +243,7 @@ export function ImageGenerator({
       if (data.error) {
         setError(data.error);
       } else {
-        onImageGenerated(data.imageUrl, finalPrompt);
+        onImageGenerated(data.imageUrl, customPrompt);
       }
     } catch {
       setError("Failed to generate image. Please try again.");
@@ -57,76 +253,321 @@ export function ImageGenerator({
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium mb-2">
-          Describe your card image
-        </label>
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Describe what you want on your card..."
-          className="w-full h-24 px-3 py-2 rounded-lg border border-border bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      {/* Suggested prompts */}
-      {occasionData && (
-        <div>
-          <p className="text-xs text-muted-foreground mb-2">
-            Or try a suggestion:
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {occasionData.suggestedImagePrompts.map((suggestion, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setPrompt(suggestion);
-                  handleGenerate(suggestion);
-                }}
-                disabled={isGenerating || remainingGenerations <= 0}
-                className="text-xs px-3 py-1.5 rounded-full border border-border hover:bg-muted transition-colors disabled:opacity-50"
-              >
-                {suggestion.slice(0, 50)}...
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="flex items-center gap-3">
-        <Button
-          onClick={() => handleGenerate()}
-          disabled={isGenerating || !prompt.trim() || remainingGenerations <= 0}
-          className="flex-1"
+    <div className="space-y-5">
+      {/* Tab Switcher */}
+      <div className="flex rounded-lg border border-border overflow-hidden">
+        <button
+          onClick={() => setActiveTab("upload")}
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+            activeTab === "upload"
+              ? "bg-primary text-primary-foreground"
+              : "bg-background text-muted-foreground hover:bg-muted"
+          }`}
         >
-          {isGenerating ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Generating...
-            </>
-          ) : imageUrl ? (
-            <>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Regenerate
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-4 h-4 mr-2" />
-              Generate Image
-            </>
-          )}
-        </Button>
-        <span className="text-xs text-muted-foreground whitespace-nowrap">
-          {remainingGenerations} left
-        </span>
+          <Upload className="w-4 h-4" />
+          Use Your Photo
+        </button>
+        <button
+          onClick={() => setActiveTab("examples")}
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+            activeTab === "examples"
+              ? "bg-primary text-primary-foreground"
+              : "bg-background text-muted-foreground hover:bg-muted"
+          }`}
+        >
+          <Palette className="w-4 h-4" />
+          Pick a Design
+        </button>
       </div>
 
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
+      {/* Tab Content */}
+      <AnimatePresence mode="wait">
+        {activeTab === "upload" && (
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="space-y-4"
+          >
+            {/* Upload Area */}
+            {!uploadedPhotoPreview ? (
+              <div
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors"
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                    <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">
+                      Drop your photo here or click to upload
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      JPEG, PNG, WebP up to 10MB
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="relative">
+                <div className="rounded-xl overflow-hidden border border-border">
+                  {isUploading ? (
+                    <div className="w-full aspect-[4/3] flex items-center justify-center bg-muted">
+                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : (
+                    <img
+                      src={uploadedPhotoPreview}
+                      alt="Your photo"
+                      className="w-full aspect-[4/3] object-cover"
+                    />
+                  )}
+                </div>
+                <button
+                  onClick={handleRemovePhoto}
+                  className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
 
-      {/* Image Preview */}
+            {/* Style Selection */}
+            {uploadedPhotoPreview && !isUploading && (
+              <div>
+                <p className="text-sm font-medium mb-3">Choose a style:</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {styles.map((style) => (
+                    <button
+                      key={style.id}
+                      onClick={() => setSelectedStyle(style)}
+                      disabled={style.id !== "original" && isDisabled}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-all text-center ${
+                        selectedStyle?.id === style.id
+                          ? "border-primary bg-primary/5 shadow-sm"
+                          : "border-border hover:border-primary/30 hover:bg-muted/30"
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    >
+                      <span className="text-2xl">{style.icon}</span>
+                      <span className="text-xs font-medium leading-tight">
+                        {style.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Apply Style / Use Photo Button */}
+                <Button
+                  onClick={handleApplyStyle}
+                  disabled={
+                    !selectedStyle ||
+                    !uploadedPhotoUrl ||
+                    (selectedStyle.id !== "original" && isDisabled)
+                  }
+                  className="w-full mt-3"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Applying Style...
+                    </>
+                  ) : selectedStyle?.id === "original" ? (
+                    <>
+                      <ImageIcon className="w-4 h-4 mr-2" />
+                      Use My Photo
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      {selectedStyle
+                        ? `Apply ${selectedStyle.name} Style`
+                        : "Select a Style"}
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {activeTab === "examples" && (
+          <motion.div
+            key="examples"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="space-y-4"
+          >
+            <p className="text-sm text-muted-foreground">
+              Pick a design and we&apos;ll create a unique card image for you:
+            </p>
+
+            {/* Example Cards Grid */}
+            <div className="grid grid-cols-3 gap-3">
+              {examples.map((example) => (
+                <button
+                  key={example.id}
+                  onClick={() => handleGenerateFromExample(example)}
+                  disabled={isDisabled}
+                  className={`group relative rounded-xl border-2 overflow-hidden transition-all ${
+                    selectedExample?.id === example.id && isGenerating
+                      ? "border-primary ring-2 ring-primary/20"
+                      : "border-border hover:border-primary/40"
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  {/* Thumbnail with fallback */}
+                  <div className="aspect-[4/3] bg-muted relative overflow-hidden">
+                    <img
+                      src={example.thumbnailUrl}
+                      alt={example.label}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to a colored placeholder with the occasion icon
+                        const target = e.target as HTMLImageElement;
+                        const occasionInfo = occasionData;
+                        const bg = occasionInfo?.colorScheme.primary || "#6366f1";
+                        target.src = `https://placehold.co/400x300/${bg.slice(1)}/white?text=${encodeURIComponent(example.label)}&font=playfair-display`;
+                      }}
+                    />
+                    {/* Generating overlay */}
+                    {selectedExample?.id === example.id && isGenerating && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <Loader2 className="w-6 h-6 animate-spin text-white" />
+                      </div>
+                    )}
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <Sparkles className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+                  <div className="p-2 text-center">
+                    <p className="text-xs font-medium truncate">
+                      {example.label}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      {example.description}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Custom Prompt (Collapsible) */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowCustomPrompt(!showCustomPrompt)}
+          className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-muted-foreground hover:bg-muted/30 transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5" />
+            Describe your own image (advanced)
+          </span>
+          {showCustomPrompt ? (
+            <ChevronUp className="w-4 h-4" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
+        </button>
+        <AnimatePresence>
+          {showCustomPrompt && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="overflow-hidden"
+            >
+              <div className="px-4 pb-4 space-y-3">
+                <textarea
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  placeholder="Describe the image you want for your card..."
+                  className="w-full h-20 px-3 py-2 rounded-lg border border-border bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+
+                {/* Quick suggestion pills from occasion data */}
+                {occasionData && (
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1.5">
+                      Suggestions:
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {occasionData.suggestedImagePrompts.map(
+                        (suggestion, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              setCustomPrompt(suggestion);
+                            }}
+                            disabled={isDisabled}
+                            className="text-[11px] px-2.5 py-1 rounded-full border border-border hover:bg-muted transition-colors disabled:opacity-50"
+                          >
+                            {suggestion.slice(0, 40)}...
+                          </button>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  onClick={handleCustomGenerate}
+                  disabled={isDisabled || !customPrompt.trim()}
+                  className="w-full"
+                  size="sm"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Generate from Description
+                    </>
+                  )}
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Remaining Generations */}
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>
+          {remainingGenerations} generation{remainingGenerations !== 1 ? "s" : ""}{" "}
+          remaining
+        </span>
+        {imageUrl && (
+          <span className="flex items-center gap-1 text-green-600">
+            <RefreshCw className="w-3 h-3" />
+            Image ready
+          </span>
+        )}
+      </div>
+
+      {/* Error Display */}
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {/* Generated Image Preview */}
       <AnimatePresence mode="wait">
         {imageUrl && (
           <motion.div
@@ -134,13 +575,18 @@ export function ImageGenerator({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="rounded-xl overflow-hidden border border-border"
+            className="rounded-xl overflow-hidden border border-border shadow-lg"
           >
             <img
               src={imageUrl}
               alt="Generated card"
               className="w-full aspect-[4/3] object-cover"
             />
+            <div className="bg-muted/30 px-4 py-2 text-center">
+              <p className="text-xs text-muted-foreground">
+                Your card image preview
+              </p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

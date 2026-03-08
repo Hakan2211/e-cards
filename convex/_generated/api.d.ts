@@ -1,99 +1,53 @@
 /* eslint-disable */
 /**
- * Generated API stub - will be replaced by `npx convex dev`
+ * Generated `api` utility.
+ *
+ * THIS CODE IS AUTOMATICALLY GENERATED.
+ *
+ * To regenerate, run `npx convex dev`.
+ * @module
  */
+
+import type * as cards from "../cards.js";
+import type * as files from "../files.js";
+import type * as occasions from "../occasions.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-// Stub types for cards module
-declare const cards: {
-  create: FunctionReference<
-    "mutation",
-    "public",
-    {
-      slug: string;
-      occasion: string;
-      packageType: string;
-      showWatermark: boolean;
-      stripeSessionId?: string;
-    },
-    string
-  >;
-  markPaid: FunctionReference<
-    "mutation",
-    "public",
-    { stripeSessionId: string },
-    string
-  >;
-  getBySlug: FunctionReference<
-    "query",
-    "public",
-    { slug: string },
-    any | null
-  >;
-  getByStripeSession: FunctionReference<
-    "query",
-    "public",
-    { stripeSessionId: string },
-    any | null
-  >;
-  updateContent: FunctionReference<
-    "mutation",
-    "public",
-    Record<string, any>,
-    void
-  >;
-  incrementImageRegen: FunctionReference<
-    "mutation",
-    "public",
-    { slug: string },
-    number
-  >;
-  markReady: FunctionReference<
-    "mutation",
-    "public",
-    { slug: string },
-    void
-  >;
-  incrementViewCount: FunctionReference<
-    "mutation",
-    "public",
-    { slug: string },
-    void
-  >;
-};
-
-declare const occasions: {
-  list: FunctionReference<"query", "public", Record<string, never>, any[]>;
-  getBySlug: FunctionReference<
-    "query",
-    "public",
-    { slug: string },
-    any | null
-  >;
-  seed: FunctionReference<"mutation", "public", Record<string, never>, string>;
-};
-
-declare const files: {
-  generateUploadUrl: FunctionReference<
-    "mutation",
-    "public",
-    Record<string, never>,
-    string
-  >;
-  getFileUrl: FunctionReference<
-    "query",
-    "public",
-    { storageId: string },
-    string | null
-  >;
-};
-
-export declare const api: {
+declare const fullApi: ApiFromModules<{
   cards: typeof cards;
-  occasions: typeof occasions;
   files: typeof files;
-};
+  occasions: typeof occasions;
+}>;
+
+/**
+ * A utility for referencing Convex functions in your app's public API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
+export declare const api: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
+
+/**
+ * A utility for referencing Convex functions in your app's internal API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = internal.myModule.myFunction;
+ * ```
+ */
+export declare const internal: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;
+
+export declare const components: {};

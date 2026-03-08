@@ -45,6 +45,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
   const incrementImageRegen = useMutation(api.cards.incrementImageRegen);
   const markReady = useMutation(api.cards.markReady);
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const getFileUrlMutation = useMutation(api.files.getFileUrlMutation);
 
   const [currentStep, setCurrentStep] = useState<StepKey>("image");
   const [localImageUrl, setLocalImageUrl] = useState<string | null>(null);
@@ -83,16 +84,56 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
   };
 
   const handleImageGenerated = useCallback(
-    async (url: string, prompt: string) => {
+    async (
+      url: string,
+      prompt: string,
+      meta?: {
+        originalPhotoUrl?: string;
+        imageStyle?: string;
+        skipRegen?: boolean;
+      }
+    ) => {
       setLocalImageUrl(url);
       try {
-        await incrementImageRegen({ slug });
-        await updateContent({ slug, imageUrl: url, imagePrompt: prompt });
+        // Only increment regen count for AI-generated images, not direct photo use
+        if (!meta?.skipRegen) {
+          await incrementImageRegen({ slug });
+        }
+        await updateContent({
+          slug,
+          imageUrl: url,
+          imagePrompt: prompt,
+          ...(meta?.originalPhotoUrl
+            ? { originalPhotoUrl: meta.originalPhotoUrl }
+            : {}),
+          ...(meta?.imageStyle ? { imageStyle: meta.imageStyle } : {}),
+        });
       } catch (e) {
         console.error("Failed to save image:", e);
       }
     },
     [slug, incrementImageRegen, updateContent]
+  );
+
+  const handlePhotoUploaded = useCallback(
+    async (file: File): Promise<string> => {
+      // Upload the file to Convex storage (same pattern as voice recording)
+      const uploadUrl = await generateUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      const { storageId } = await result.json();
+
+      // Get the public URL for the uploaded file
+      const publicUrl = await getFileUrlMutation({ storageId });
+      if (!publicUrl) {
+        throw new Error("Failed to get public URL for uploaded photo");
+      }
+      return publicUrl;
+    },
+    [generateUploadUrl, getFileUrlMutation]
   );
 
   const handleMessageUpdate = useCallback(
@@ -123,6 +164,7 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
         await updateContent({ slug, voiceStorageId: storageId });
       } catch (e) {
         console.error("Failed to upload voice:", e);
+        throw e; // Rethrow so VoiceRecorder can show error toast
       }
     },
     [slug, generateUploadUrl, updateContent]
@@ -233,13 +275,14 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
               <div>
                 <h2 className="text-xl font-bold mb-1">Create Your Card Image</h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Describe the image you want and our AI will generate it for you
+                  Upload your own photo or pick from our designs
                 </p>
                 <ImageGenerator
                   occasion={card.occasion}
                   imageUrl={localImageUrl}
                   imageRegenCount={card.imageRegenCount}
                   onImageGenerated={handleImageGenerated}
+                  onPhotoUploaded={handlePhotoUploaded}
                   slug={slug}
                 />
               </div>

@@ -14,6 +14,8 @@ export default defineSchema({
     imageStorageId: v.optional(v.id("_storage")),
     imagePrompt: v.optional(v.string()),
     imageRegenCount: v.number(),
+    originalPhotoUrl: v.optional(v.string()), // user's uploaded photo before AI transform
+    imageStyle: v.optional(v.string()), // style preset used (e.g. "polaroid", "watercolor")
 
     // Voice
     voiceStorageId: v.optional(v.id("_storage")),

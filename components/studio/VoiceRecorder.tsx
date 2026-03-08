@@ -2,8 +2,9 @@
 
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { Button } from "@/components/ui/button";
-import { Mic, Square, Trash2, Play, Pause, Upload, Loader2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { Mic, Square, Trash2, Play, Pause, Loader2, Check } from "lucide-react";
+import { useState, useRef, useCallback } from "react";
+import { toast } from "sonner";
 
 interface VoiceRecorderProps {
   onVoiceRecorded: (blob: Blob) => Promise<void>;
@@ -11,6 +12,30 @@ interface VoiceRecorderProps {
 }
 
 export function VoiceRecorder({ onVoiceRecorded, hasVoice }: VoiceRecorderProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(hasVoice);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Auto-save callback — called immediately when recording stops
+  const handleRecordingComplete = useCallback(
+    async (blob: Blob) => {
+      setIsSaving(true);
+      setIsSaved(false);
+      try {
+        await onVoiceRecorded(blob);
+        setIsSaved(true);
+        toast.success("Voice recording saved!");
+      } catch {
+        toast.error("Failed to save recording. Please try again.");
+        setIsSaved(false);
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [onVoiceRecorded]
+  );
+
   const {
     isRecording,
     audioBlob,
@@ -20,11 +45,7 @@ export function VoiceRecorder({ onVoiceRecorded, hasVoice }: VoiceRecorderProps)
     startRecording,
     stopRecording,
     clearRecording,
-  } = useVoiceRecorder();
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  } = useVoiceRecorder({ onRecordingComplete: handleRecordingComplete });
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -44,20 +65,17 @@ export function VoiceRecorder({ onVoiceRecorded, hasVoice }: VoiceRecorderProps)
     }
   };
 
-  const handleSave = async () => {
-    if (!audioBlob) return;
-    setIsUploading(true);
-    try {
-      await onVoiceRecorded(audioBlob);
-    } finally {
-      setIsUploading(false);
-    }
+  const handleReRecord = () => {
+    setIsSaved(false);
+    clearRecording();
   };
 
   return (
     <div className="space-y-4">
-      {hasVoice && !audioBlob && (
-        <div className="p-3 rounded-lg bg-primary/10 text-sm text-primary">
+      {/* Saved indicator (when returning to this step with existing recording) */}
+      {hasVoice && !audioBlob && !isRecording && (
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 text-sm text-green-700 border border-green-200">
+          <Check className="w-4 h-4 flex-shrink-0" />
           Voice recording saved! You can record a new one to replace it.
         </div>
       )}
@@ -92,6 +110,9 @@ export function VoiceRecorder({ onVoiceRecorded, hasVoice }: VoiceRecorderProps)
                   <Square className="w-4 h-4 mr-2" />
                   Stop Recording
                 </Button>
+                <p className="text-xs text-muted-foreground">
+                  Recording will be saved automatically when you stop
+                </p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3">
@@ -110,11 +131,28 @@ export function VoiceRecorder({ onVoiceRecorded, hasVoice }: VoiceRecorderProps)
           </>
         ) : (
           <div className="w-full space-y-4">
+            {/* Saving indicator */}
+            {isSaving && (
+              <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-primary/10 text-sm text-primary">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Saving your recording...
+              </div>
+            )}
+
+            {/* Saved confirmation */}
+            {isSaved && !isSaving && (
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 text-sm text-green-700 border border-green-200">
+                <Check className="w-4 h-4 flex-shrink-0" />
+                Recording saved successfully!
+              </div>
+            )}
+
             {/* Playback */}
             <div className="flex items-center gap-3 p-4 rounded-lg border border-border">
               <button
                 onClick={togglePlayback}
-                className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0"
+                disabled={isSaving}
+                className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 disabled:opacity-50"
               >
                 {isPlaying ? (
                   <Pause className="w-5 h-5" />
@@ -124,7 +162,11 @@ export function VoiceRecorder({ onVoiceRecorded, hasVoice }: VoiceRecorderProps)
               </button>
               <div className="flex-1">
                 <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full bg-primary rounded-full w-0 transition-all" />
+                  <div
+                    className={`h-full bg-primary rounded-full transition-all ${
+                      isSaved ? "w-full" : "w-0"
+                    }`}
+                  />
                 </div>
               </div>
               <span className="text-sm font-mono text-muted-foreground">
@@ -140,34 +182,16 @@ export function VoiceRecorder({ onVoiceRecorded, hasVoice }: VoiceRecorderProps)
               />
             )}
 
-            {/* Actions */}
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={clearRecording}
-                className="flex-1"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Re-record
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={isUploading}
-                className="flex-1"
-              >
-                {isUploading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="w-4 h-4 mr-2" />
-                    Save Recording
-                  </>
-                )}
-              </Button>
-            </div>
+            {/* Re-record button */}
+            <Button
+              variant="outline"
+              onClick={handleReRecord}
+              disabled={isSaving}
+              className="w-full"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Re-record
+            </Button>
           </div>
         )}
       </div>

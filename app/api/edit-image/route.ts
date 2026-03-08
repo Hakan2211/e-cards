@@ -2,30 +2,41 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { prompt, slug } = await req.json();
+    const { imageUrl, prompt, slug } = await req.json();
+
+    if (!imageUrl) {
+      return NextResponse.json(
+        { error: "Image URL is required" },
+        { status: 400 }
+      );
+    }
 
     if (!prompt) {
-      return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Style prompt is required" },
+        { status: 400 }
+      );
     }
 
     if (!process.env.FAL_KEY) {
       // Return a placeholder in dev mode
       return NextResponse.json({
-        imageUrl: `https://placehold.co/1024x1024/6366f1/white?text=${encodeURIComponent("AI Generated Card")}&font=playfair-display`,
+        imageUrl: `https://placehold.co/1024x768/8b5cf6/white?text=${encodeURIComponent("Styled Card")}&font=playfair-display`,
         message: "Dev mode: FAL_KEY not configured. Using placeholder image.",
       });
     }
 
     const { fal } = await import("@fal-ai/client");
-    
+
     fal.config({
       credentials: process.env.FAL_KEY,
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = await fal.subscribe("fal-ai/nano-banana-2" as any, {
+    const result = await fal.subscribe("fal-ai/nano-banana-2/edit" as any, {
       input: {
-        prompt: `High quality greeting card illustration: ${prompt}. Professional card design, beautiful and detailed, suitable for a greeting card.`,
+        prompt: `${prompt}. Professional greeting card design, beautiful and high quality.`,
+        image_urls: [imageUrl],
         num_images: 1,
         aspect_ratio: "4:3",
         output_format: "png",
@@ -35,20 +46,20 @@ export async function POST(req: NextRequest) {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const imageUrl = (result.data as any)?.images?.[0]?.url;
+    const resultImageUrl = (result.data as any)?.images?.[0]?.url;
 
-    if (!imageUrl) {
+    if (!resultImageUrl) {
       return NextResponse.json(
         { error: "No image generated" },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ imageUrl, slug });
+    return NextResponse.json({ imageUrl: resultImageUrl, slug });
   } catch (error) {
-    console.error("Image generation error:", error);
+    console.error("Image edit error:", error);
     return NextResponse.json(
-      { error: "Failed to generate image" },
+      { error: "Failed to edit image" },
       { status: 500 }
     );
   }

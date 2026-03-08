@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     // Dynamic import to avoid errors when stripe key not set
     const Stripe = (await import("stripe")).default;
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2026-01-28.clover",
+      apiVersion: "2025-08-27.basil",
     });
 
     const session = await stripe.checkout.sessions.create({

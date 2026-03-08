@@ -14,3 +14,11 @@ export const getFileUrl = query({
     return await ctx.storage.getUrl(args.storageId);
   },
 });
+
+// Mutation version of getFileUrl — used for one-off URL lookups after upload
+export const getFileUrlMutation = mutation({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    return await ctx.storage.getUrl(args.storageId);
+  },
+});

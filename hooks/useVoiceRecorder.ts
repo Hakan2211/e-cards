@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 interface VoiceRecorderState {
   isRecording: boolean;
@@ -10,7 +10,11 @@ interface VoiceRecorderState {
   error: string | null;
 }
 
-export function useVoiceRecorder() {
+interface UseVoiceRecorderOptions {
+  onRecordingComplete?: (blob: Blob) => void;
+}
+
+export function useVoiceRecorder(options?: UseVoiceRecorderOptions) {
   const [state, setState] = useState<VoiceRecorderState>({
     isRecording: false,
     audioBlob: null,
@@ -23,6 +27,12 @@ export function useVoiceRecorder() {
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const onRecordingCompleteRef = useRef(options?.onRecordingComplete);
+
+  // Keep the callback ref up to date
+  useEffect(() => {
+    onRecordingCompleteRef.current = options?.onRecordingComplete;
+  }, [options?.onRecordingComplete]);
 
   const startRecording = useCallback(async () => {
     try {
@@ -58,6 +68,11 @@ export function useVoiceRecorder() {
 
         // Stop all tracks
         stream.getTracks().forEach((track) => track.stop());
+
+        // Call the auto-save callback if provided
+        if (onRecordingCompleteRef.current) {
+          onRecordingCompleteRef.current(blob);
+        }
       };
 
       mediaRecorder.start();
@@ -109,6 +124,15 @@ export function useVoiceRecorder() {
       error: null,
     });
   }, [state.audioUrl]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
   return {
     ...state,

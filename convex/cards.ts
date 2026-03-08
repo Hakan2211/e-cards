@@ -93,6 +93,8 @@ export const updateContent = mutation({
     imageUrl: v.optional(v.string()),
     imageStorageId: v.optional(v.id("_storage")),
     imagePrompt: v.optional(v.string()),
+    originalPhotoUrl: v.optional(v.string()),
+    imageStyle: v.optional(v.string()),
     voiceStorageId: v.optional(v.id("_storage")),
     musicUrl: v.optional(v.string()),
     musicStorageId: v.optional(v.id("_storage")),

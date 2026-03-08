@@ -1,22 +1,23 @@
 /* eslint-disable */
 /**
- * Generated API stub - will be replaced by `npx convex dev`
- * This file exists so that imports resolve during development.
+ * Generated `api` utility.
+ *
+ * THIS CODE IS AUTOMATICALLY GENERATED.
+ *
+ * To regenerate, run `npx convex dev`.
+ * @module
  */
 
-// This is a placeholder. Run `npx convex dev` to generate the real API.
-export const api = new Proxy(
-  {},
-  {
-    get(_target, prop) {
-      return new Proxy(
-        {},
-        {
-          get(_target2, prop2) {
-            return `${String(prop)}:${String(prop2)}`;
-          },
-        }
-      );
-    },
-  }
-);
+import { anyApi, componentsGeneric } from "convex/server";
+
+/**
+ * A utility for referencing Convex functions in your app's API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
+export const api = anyApi;
+export const internal = anyApi;
+export const components = componentsGeneric();
