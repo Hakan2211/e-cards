@@ -4,7 +4,7 @@ import { createSlug } from "@/lib/slug";
 
 export async function POST(req: NextRequest) {
   try {
-    const { packageType, occasion, showWatermark } = await req.json();
+    const { packageType, occasion, showWatermark, customOccasionName } = await req.json();
 
     // Validate package
     if (!PACKAGES[packageType as PackageKey]) {
@@ -15,10 +15,14 @@ export async function POST(req: NextRequest) {
     const slug = createSlug();
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
+    const customParam = customOccasionName
+      ? `&customOccasionName=${encodeURIComponent(customOccasionName)}`
+      : "";
+
     // If Stripe is not configured, go directly to studio (dev mode)
     if (!process.env.STRIPE_SECRET_KEY) {
       return NextResponse.json({
-        url: `${baseUrl}/checkout/success?slug=${slug}&occasion=${occasion}&package=${packageType}&watermark=${showWatermark}&dev=true`,
+        url: `${baseUrl}/checkout/success?slug=${slug}&occasion=${occasion}&package=${packageType}&watermark=${showWatermark}&dev=true${customParam}`,
       });
     }
 
@@ -35,7 +39,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: "usd",
             product_data: {
-              name: `E-card4You - ${pkg.name}`,
+              name: `Cardlar - ${pkg.name}`,
               description: pkg.description,
             },
             unit_amount: pkg.price,
@@ -44,13 +48,14 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: "payment",
-      success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}&slug=${slug}&occasion=${occasion}&package=${packageType}&watermark=${showWatermark}`,
+      success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}&slug=${slug}&occasion=${occasion}&package=${packageType}&watermark=${showWatermark}${customParam}`,
       cancel_url: `${baseUrl}/checkout/cancel?occasion=${occasion}`,
       metadata: {
         slug,
         occasion,
         packageType,
         showWatermark: String(showWatermark),
+        ...(customOccasionName ? { customOccasionName } : {}),
       },
     });
 

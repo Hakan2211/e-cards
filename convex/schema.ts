@@ -25,6 +25,9 @@ export default defineSchema({
     musicStorageId: v.optional(v.id("_storage")),
     musicPrompt: v.optional(v.string()),
 
+    // Custom occasion
+    customOccasionName: v.optional(v.string()), // user-typed name when occasion === "custom"
+
     // Package & Payment
     packageType: v.string(), // basic | voice | music | full
     showWatermark: v.boolean(),

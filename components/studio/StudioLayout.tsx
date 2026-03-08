@@ -11,7 +11,7 @@ import { ImageGenerator } from "./ImageGenerator";
 import { MessageEditor } from "./MessageEditor";
 import { VoiceRecorder } from "./VoiceRecorder";
 import { MusicGenerator } from "./MusicGenerator";
-import { PACKAGES, PackageKey } from "@/lib/constants";
+import { PACKAGES, PackageKey, OCCASIONS } from "@/lib/constants";
 import {
   Image,
   MessageSquare,
@@ -60,6 +60,11 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
   }, [card]);
 
   const pkg = card ? PACKAGES[card.packageType as PackageKey] : null;
+  const occasionData = card ? OCCASIONS.find((o) => o.slug === card.occasion) : null;
+  const displayOccasionName =
+    card?.occasion === "custom" && card?.customOccasionName
+      ? card.customOccasionName
+      : occasionData?.name || "Card";
 
   const allSteps: Step[] = [
     { key: "image" as StepKey, label: "Image", icon: <Image className="w-4 h-4" />, available: true },
@@ -228,11 +233,19 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
           <Logo size="sm" />
-          {card.expiresAt && (
-            <span className="text-xs text-muted-foreground">
-              {daysRemaining(card.expiresAt)} days left
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            {occasionData && (
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-xs font-medium border border-border">
+                <span>{occasionData.icon}</span>
+                {displayOccasionName}
+              </span>
+            )}
+            {card.expiresAt && (
+              <span className="text-xs text-muted-foreground">
+                {daysRemaining(card.expiresAt)} days left
+              </span>
+            )}
+          </div>
         </div>
       </header>
 
@@ -275,7 +288,9 @@ export function StudioLayout({ slug }: StudioLayoutProps) {
           >
             {currentStep === "image" && (
               <div>
-                <h2 className="text-xl font-heading font-bold mb-1">Create Your Card Image</h2>
+                <h2 className="text-xl font-heading font-bold mb-1">
+                  Create Your {displayOccasionName} Card Image
+                </h2>
                 <p className="text-sm text-muted-foreground mb-4">
                   Upload your own photo or pick from our designs
                 </p>

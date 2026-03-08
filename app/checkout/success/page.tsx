@@ -19,6 +19,7 @@ function CheckoutSuccessContent() {
   const showWatermark = searchParams.get("watermark") !== "false";
   const sessionId = searchParams.get("session_id");
   const isDev = searchParams.get("dev") === "true";
+  const customOccasionName = searchParams.get("customOccasionName") || undefined;
 
   const [status, setStatus] = useState("Setting up your card...");
 
@@ -34,6 +35,7 @@ function CheckoutSuccessContent() {
           packageType,
           showWatermark,
           stripeSessionId: sessionId || `dev_${slug}`,
+          ...(customOccasionName ? { customOccasionName } : {}),
         });
 
         setStatus("Card created! Redirecting to studio...");
@@ -60,7 +62,7 @@ function CheckoutSuccessContent() {
     }
 
     setupCard();
-  }, [slug, occasion, packageType, showWatermark, sessionId, isDev, createCard, markPaid, router]);
+  }, [slug, occasion, packageType, showWatermark, sessionId, isDev, customOccasionName, createCard, markPaid, router]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">

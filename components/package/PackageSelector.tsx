@@ -14,6 +14,7 @@ export function PackageSelector() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const occasion = searchParams.get("occasion") || "birthday";
+  const customOccasionName = searchParams.get("customOccasionName") || undefined;
   const occasionData = OCCASIONS.find((o) => o.slug === occasion);
 
   const [selectedPackage, setSelectedPackage] = useState<PackageKey>("full");
@@ -30,6 +31,7 @@ export function PackageSelector() {
           packageType: selectedPackage,
           occasion,
           showWatermark,
+          ...(customOccasionName ? { customOccasionName } : {}),
         }),
       });
 
@@ -74,7 +76,9 @@ export function PackageSelector() {
           >
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm font-medium border border-border">
               <span className="text-xl">{occasionData.icon}</span>
-              {occasionData.name}
+              {occasion === "custom" && customOccasionName
+                ? customOccasionName
+                : occasionData.name}
             </span>
           </motion.div>
         )}

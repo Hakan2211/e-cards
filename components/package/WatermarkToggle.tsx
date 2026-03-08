@@ -14,7 +14,7 @@ export function WatermarkToggle({
       <div>
         <p className="font-medium text-sm">Show watermark</p>
         <p className="text-xs text-muted-foreground">
-          &quot;Made with E-card4You&quot; will appear on the card
+          &quot;Made with Cardlar&quot; will appear on the card
         </p>
       </div>
       <button

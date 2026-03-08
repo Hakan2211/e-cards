@@ -37,7 +37,7 @@ export function Hero() {
         transition={{ duration: 0.7, ease: "easeOut" }}
         className="relative z-10 max-w-3xl mx-auto"
       >
-        <Logo size="lg" className="mb-8 inline-block" />
+        <Logo size="lg" className="mb-8" />
 
         <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 leading-tight">
           Send Personalized{" "}

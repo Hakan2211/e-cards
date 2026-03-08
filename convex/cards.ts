@@ -9,6 +9,7 @@ export const create = mutation({
     packageType: v.string(),
     showWatermark: v.boolean(),
     stripeSessionId: v.optional(v.string()),
+    customOccasionName: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const cardId = await ctx.db.insert("cards", {
@@ -21,6 +22,7 @@ export const create = mutation({
       packageType: args.packageType,
       showWatermark: args.showWatermark,
       stripeSessionId: args.stripeSessionId,
+      ...(args.customOccasionName ? { customOccasionName: args.customOccasionName } : {}),
       isPaid: false,
       viewCount: 0,
       status: "pending_payment",

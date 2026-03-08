@@ -1,4 +1,4 @@
-export const APP_NAME = "E-card4You";
+export const APP_NAME = "Cardlar";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 // ─── Occasion Types (needed early for style/example records) ──────────
@@ -12,7 +12,24 @@ export type OccasionKey =
   | "christmas"
   | "valentines"
   | "condolences"
-  | "anniversary";
+  | "anniversary"
+  | "mothers-day"
+  | "fathers-day"
+  | "graduation"
+  | "new-home"
+  | "new-job"
+  | "retirement"
+  | "engagement"
+  | "new-baby"
+  | "easter"
+  | "new-year"
+  | "halloween"
+  | "thanksgiving"
+  | "thinking-of-you"
+  | "good-luck"
+  | "miss-you"
+  | "sorry"
+  | "custom";
 
 // ─── Image Style Presets (per occasion) ───────────────────────────────
 export interface StylePreset {
@@ -275,6 +292,404 @@ export const OCCASION_STYLES: Record<OccasionKey, StylePreset[]> = {
       generatePrompt: "An elegant watercolor anniversary scene with rich romantic reds and golds, flowing rose petals, champagne glasses, and beautiful celebration atmosphere",
     },
   ],
+  "mothers-day": [
+    {
+      id: "floral-watercolor",
+      name: "Floral Watercolor",
+      icon: "🎨",
+      editPrompt: "Transform this photo into a soft floral watercolor painting with delicate pink and white flowers, gentle brushstrokes, and a warm loving Mother's Day atmosphere",
+      generatePrompt: "A soft floral watercolor painting of pink and white roses with gentle brushstrokes, warm golden light, loving and elegant Mother's Day atmosphere",
+    },
+    {
+      id: "garden-portrait",
+      name: "Garden Portrait",
+      icon: "🌷",
+      editPrompt: "Transform this photo into a beautiful garden portrait with blooming flowers, soft natural light, and a warm nurturing maternal atmosphere",
+      generatePrompt: "A beautiful garden scene with blooming tulips and roses in soft natural light, butterflies, warm nurturing and loving Mother's Day atmosphere",
+    },
+    {
+      id: "elegant-gold",
+      name: "Elegant Gold",
+      icon: "✨",
+      editPrompt: "Transform this photo with elegant golden accents, refined floral borders, soft warm lighting, and a sophisticated Mother's Day feel",
+      generatePrompt: "An elegant Mother's Day design with golden floral borders, refined roses, soft warm lighting, sophisticated and loving atmosphere",
+    },
+  ],
+  "fathers-day": [
+    {
+      id: "classic-vintage",
+      name: "Classic Vintage",
+      icon: "📜",
+      editPrompt: "Transform this photo into a classic vintage style with warm sepia tones, refined masculine feel, and a distinguished Father's Day atmosphere",
+      generatePrompt: "A classic vintage Father's Day scene with warm sepia tones, leather-bound books, a fine pocket watch, distinguished and refined atmosphere",
+    },
+    {
+      id: "outdoor-adventure",
+      name: "Outdoor Adventure",
+      icon: "🏔️",
+      editPrompt: "Transform this photo into an outdoor adventure style with warm natural colors, mountain or nature backdrop, and a rugged wholesome Father's Day feel",
+      generatePrompt: "A scenic outdoor landscape with mountains and a warm sunset, fishing rod by a lake, rustic and adventurous Father's Day atmosphere",
+    },
+    {
+      id: "warm-portrait",
+      name: "Warm Portrait",
+      icon: "🖼️",
+      editPrompt: "Transform this photo into a warm portrait style with rich golden lighting, classic composition, and a heartfelt Father's Day atmosphere",
+      generatePrompt: "A warm portrait-style Father's Day scene with golden lighting, a cozy study with books and a comfortable chair, heartfelt and distinguished",
+    },
+  ],
+  graduation: [
+    {
+      id: "golden-achievement",
+      name: "Golden Achievement",
+      icon: "🏆",
+      editPrompt: "Transform this photo into a golden achievement style with confetti, academic decorations, golden light, and a proud graduation celebration atmosphere",
+      generatePrompt: "A proud graduation celebration with golden confetti, a mortarboard cap and diploma, streamers, golden light, and triumphant achievement atmosphere",
+    },
+    {
+      id: "classic-academic",
+      name: "Classic Academic",
+      icon: "📜",
+      editPrompt: "Transform this photo into a classic academic portrait style with rich warm tones, elegant academic elements, and a dignified graduation atmosphere",
+      generatePrompt: "A classic academic graduation scene with rich warm tones, elegant diploma scroll, mortarboard, and dignified celebration atmosphere",
+    },
+    {
+      id: "festive-celebration",
+      name: "Festive Celebration",
+      icon: "🎉",
+      editPrompt: "Transform this photo into a festive graduation celebration with colorful confetti, balloons, and an energetic party atmosphere",
+      generatePrompt: "A festive graduation celebration with colorful confetti, balloons, cap toss in the air, bright sunny day, energetic and joyful atmosphere",
+    },
+  ],
+  "new-home": [
+    {
+      id: "cozy-watercolor",
+      name: "Cozy Watercolor",
+      icon: "🎨",
+      editPrompt: "Transform this photo into a cozy watercolor illustration of a charming home with warm lights, a garden path, and welcoming housewarming atmosphere",
+      generatePrompt: "A cozy watercolor illustration of a charming cottage with warm glowing windows, garden path, flowers, and welcoming housewarming atmosphere",
+    },
+    {
+      id: "key-moment",
+      name: "Key Moment",
+      icon: "🔑",
+      editPrompt: "Transform this photo with a golden house key motif, warm lighting, home decorations, and a celebratory new home atmosphere",
+      generatePrompt: "A golden house key with a ribbon bow, front door of a beautiful home, flowers and warm sunlight, celebratory new home atmosphere",
+    },
+    {
+      id: "warm-interior",
+      name: "Warm Interior",
+      icon: "🏡",
+      editPrompt: "Transform this photo into a warm cozy interior scene with soft lighting, comfortable furnishings, and a welcoming homey atmosphere",
+      generatePrompt: "A warm cozy living room interior with soft lighting, comfortable furnishings, fireplace, fresh flowers, and inviting new home atmosphere",
+    },
+  ],
+  "new-job": [
+    {
+      id: "professional-gold",
+      name: "Professional Gold",
+      icon: "✨",
+      editPrompt: "Transform this photo with professional golden accents, confident lighting, and a polished celebratory new career atmosphere",
+      generatePrompt: "A professional celebration scene with golden accents, a sleek desk with fresh flowers, city skyline view, confident new job atmosphere",
+    },
+    {
+      id: "fresh-start",
+      name: "Fresh Start",
+      icon: "🌅",
+      editPrompt: "Transform this photo into a fresh start sunrise scene with optimistic warm colors, new beginnings feel, and an exciting career ahead atmosphere",
+      generatePrompt: "A beautiful sunrise over a modern cityscape with warm optimistic colors, fresh coffee and notebook, exciting new beginnings career atmosphere",
+    },
+    {
+      id: "celebration-confetti",
+      name: "Celebration Confetti",
+      icon: "🎉",
+      editPrompt: "Transform this photo with colorful confetti, celebratory elements, and an upbeat congratulatory new job atmosphere",
+      generatePrompt: "A joyful celebration with colorful confetti, champagne toast, party elements, bright energetic congratulatory new job atmosphere",
+    },
+  ],
+  retirement: [
+    {
+      id: "golden-sunset",
+      name: "Golden Sunset",
+      icon: "🌅",
+      editPrompt: "Transform this photo into a warm golden sunset scene with peaceful relaxing vibes, soft warm colors, and a serene retirement celebration atmosphere",
+      generatePrompt: "A beautiful golden sunset over a calm ocean with warm peaceful colors, a sailboat on gentle waves, serene and celebratory retirement atmosphere",
+    },
+    {
+      id: "elegant-celebration",
+      name: "Elegant Celebration",
+      icon: "🥂",
+      editPrompt: "Transform this photo into an elegant celebration style with golden accents, champagne, refined details, and a distinguished retirement atmosphere",
+      generatePrompt: "An elegant retirement celebration with champagne glasses, golden accents, refined floral arrangements, and distinguished celebratory atmosphere",
+    },
+    {
+      id: "leisure-paradise",
+      name: "Leisure Paradise",
+      icon: "🏖️",
+      editPrompt: "Transform this photo into a tropical paradise scene with turquoise water, palm trees, relaxing vibes, and a well-deserved retirement atmosphere",
+      generatePrompt: "A tropical paradise beach scene with turquoise water, palm trees, hammock, golden sunshine, well-deserved retirement relaxation atmosphere",
+    },
+  ],
+  engagement: [
+    {
+      id: "romantic-sparkle",
+      name: "Romantic Sparkle",
+      icon: "💎",
+      editPrompt: "Transform this photo with sparkling diamond accents, romantic soft lighting, rose petals, and an enchanting engagement celebration atmosphere",
+      generatePrompt: "A sparkling diamond ring on rose petals with soft bokeh lights, romantic champagne celebration, enchanting engagement atmosphere",
+    },
+    {
+      id: "elegant-watercolor",
+      name: "Elegant Watercolor",
+      icon: "🎨",
+      editPrompt: "Transform this photo into an elegant watercolor with romantic pinks and golds, flowing floral details, and a dreamy engagement celebration feel",
+      generatePrompt: "An elegant watercolor engagement scene with romantic pink and gold tones, flowing floral arrangements, champagne, and dreamy celebration atmosphere",
+    },
+    {
+      id: "golden-toast",
+      name: "Golden Toast",
+      icon: "🥂",
+      editPrompt: "Transform this photo with golden champagne celebration elements, elegant bokeh, and a luxurious engagement announcement atmosphere",
+      generatePrompt: "A luxurious engagement celebration with champagne toast, golden sparkles, elegant roses, and sophisticated announcement atmosphere",
+    },
+  ],
+  "new-baby": [
+    {
+      id: "soft-pastel",
+      name: "Soft Pastel",
+      icon: "🎨",
+      editPrompt: "Transform this photo into a soft pastel style with gentle baby colors, cute elements like tiny stars and clouds, and a sweet newborn welcome atmosphere",
+      generatePrompt: "A soft pastel welcome baby scene with gentle pink and blue tones, tiny stars, clouds, baby booties, and sweet newborn celebration atmosphere",
+    },
+    {
+      id: "storybook",
+      name: "Storybook",
+      icon: "📖",
+      editPrompt: "Transform this photo into a whimsical children's storybook illustration with gentle colors, cute animals, and a magical new baby atmosphere",
+      generatePrompt: "A whimsical storybook illustration welcoming a new baby with cute woodland animals, soft pastel sky, gentle clouds, and magical warm atmosphere",
+    },
+    {
+      id: "tender-portrait",
+      name: "Tender Portrait",
+      icon: "👶",
+      editPrompt: "Transform this photo into a tender portrait style with soft warm lighting, delicate baby elements, and a loving newborn welcome atmosphere",
+      generatePrompt: "A tender portrait scene with soft warm lighting, baby crib with mobile, soft toys, delicate flowers, and loving newborn welcome atmosphere",
+    },
+  ],
+  easter: [
+    {
+      id: "spring-watercolor",
+      name: "Spring Watercolor",
+      icon: "🎨",
+      editPrompt: "Transform this photo into a fresh spring watercolor with pastel flowers, Easter eggs, butterflies, and a bright cheerful Easter atmosphere",
+      generatePrompt: "A fresh spring watercolor painting with pastel flowers, decorated Easter eggs in a basket, butterflies, and bright cheerful Easter atmosphere",
+    },
+    {
+      id: "bunny-illustration",
+      name: "Bunny Illustration",
+      icon: "🐰",
+      editPrompt: "Transform this photo into a cute Easter bunny illustration style with spring flowers, decorated eggs, and a whimsical Easter garden atmosphere",
+      generatePrompt: "A cute Easter bunny illustration in a spring garden with colorful decorated eggs, blooming flowers, and whimsical cheerful Easter atmosphere",
+    },
+    {
+      id: "pastel-garden",
+      name: "Pastel Garden",
+      icon: "🌸",
+      editPrompt: "Transform this photo into a pastel Easter garden scene with blooming spring flowers, soft sunshine, and a peaceful joyful Easter atmosphere",
+      generatePrompt: "A pastel Easter garden with blooming cherry blossoms, spring flowers, decorated eggs hidden in grass, soft sunshine and joyful atmosphere",
+    },
+  ],
+  "new-year": [
+    {
+      id: "midnight-gold",
+      name: "Midnight Gold",
+      icon: "🌟",
+      editPrompt: "Transform this photo into a midnight gold celebration style with sparklers, golden confetti, champagne, and a glamorous New Year's Eve atmosphere",
+      generatePrompt: "A glamorous New Year's Eve celebration with midnight sky, golden fireworks, sparklers, champagne glasses, and festive golden confetti",
+    },
+    {
+      id: "fireworks-spectacular",
+      name: "Fireworks Spectacular",
+      icon: "🎆",
+      editPrompt: "Transform this photo with spectacular fireworks in a midnight sky, colorful bursts, city lights, and a thrilling New Year's celebration atmosphere",
+      generatePrompt: "Spectacular fireworks over a city skyline at midnight, colorful bursts in a dark sky, city lights reflecting on water, thrilling New Year celebration",
+    },
+    {
+      id: "elegant-countdown",
+      name: "Elegant Countdown",
+      icon: "🕛",
+      editPrompt: "Transform this photo into an elegant New Year countdown style with a vintage clock, golden decorations, champagne, and a refined celebration atmosphere",
+      generatePrompt: "An elegant New Year countdown with a vintage clock striking midnight, golden decorations, champagne bubbles, and refined celebration atmosphere",
+    },
+  ],
+  halloween: [
+    {
+      id: "spooky-fun",
+      name: "Spooky Fun",
+      icon: "👻",
+      editPrompt: "Transform this photo into a fun spooky Halloween style with jack-o-lanterns, friendly ghosts, bats, and a festive not-too-scary Halloween atmosphere",
+      generatePrompt: "A fun spooky Halloween scene with glowing jack-o-lanterns, friendly ghosts, bats flying in a moonlit sky, festive and playfully spooky atmosphere",
+    },
+    {
+      id: "autumn-harvest",
+      name: "Autumn Harvest",
+      icon: "🍂",
+      editPrompt: "Transform this photo into a warm autumn harvest Halloween style with pumpkins, fall leaves, warm golden light, and a cozy seasonal atmosphere",
+      generatePrompt: "A warm autumn harvest scene with pumpkins, colorful fall leaves, rustic farmhouse, golden sunset light, cozy Halloween harvest atmosphere",
+    },
+    {
+      id: "moonlit-mystery",
+      name: "Moonlit Mystery",
+      icon: "🌙",
+      editPrompt: "Transform this photo into a moonlit Halloween mystery style with a full moon, silhouetted trees, atmospheric fog, and an enchanting spooky atmosphere",
+      generatePrompt: "A moonlit Halloween scene with a full moon, silhouetted bare trees, atmospheric fog, haunted mansion, enchanting and mysteriously spooky atmosphere",
+    },
+  ],
+  thanksgiving: [
+    {
+      id: "harvest-warmth",
+      name: "Harvest Warmth",
+      icon: "🍂",
+      editPrompt: "Transform this photo into a warm harvest Thanksgiving style with autumn colors, golden light, cornucopia elements, and a grateful cozy atmosphere",
+      generatePrompt: "A warm Thanksgiving harvest scene with autumn colors, golden cornucopia with fruits and vegetables, fall leaves, grateful and cozy atmosphere",
+    },
+    {
+      id: "family-feast",
+      name: "Family Feast",
+      icon: "🦃",
+      editPrompt: "Transform this photo into a warm family feast style with a beautifully set table, autumn decorations, candles, and a thankful Thanksgiving atmosphere",
+      generatePrompt: "A beautiful Thanksgiving feast table with autumn decorations, warm candles, pumpkins, fall flowers, and a thankful family gathering atmosphere",
+    },
+    {
+      id: "golden-autumn",
+      name: "Golden Autumn",
+      icon: "🍁",
+      editPrompt: "Transform this photo into a golden autumn landscape with warm amber and gold tones, falling leaves, peaceful scenery, and a thankful atmosphere",
+      generatePrompt: "A golden autumn landscape with warm amber and gold foliage, a winding path through colorful trees, peaceful and thankful Thanksgiving atmosphere",
+    },
+  ],
+  "thinking-of-you": [
+    {
+      id: "gentle-watercolor",
+      name: "Gentle Watercolor",
+      icon: "🎨",
+      editPrompt: "Transform this photo into a gentle watercolor with soft calming colors, delicate flowers, and a warm thoughtful caring atmosphere",
+      generatePrompt: "A gentle watercolor of soft wildflowers with calming pastel colors, warm sunlight, delicate butterflies, and a warm thoughtful caring atmosphere",
+    },
+    {
+      id: "cozy-warmth",
+      name: "Cozy Warmth",
+      icon: "☕",
+      editPrompt: "Transform this photo into a cozy warm scene with soft golden light, comfortable elements, and a caring thinking-of-you atmosphere",
+      generatePrompt: "A cozy warm scene with a cup of tea by a window, soft golden light, a knitted blanket, fresh flowers, and caring thinking-of-you atmosphere",
+    },
+    {
+      id: "starlit-sky",
+      name: "Starlit Sky",
+      icon: "🌟",
+      editPrompt: "Transform this photo into a beautiful starlit sky scene with soft moonlight, gentle clouds, and a reflective thinking-of-you atmosphere",
+      generatePrompt: "A beautiful starlit night sky with soft moonlight, gentle clouds, a peaceful meadow below, and reflective thinking-of-you atmosphere",
+    },
+  ],
+  "good-luck": [
+    {
+      id: "golden-stars",
+      name: "Golden Stars",
+      icon: "⭐",
+      editPrompt: "Transform this photo with golden shooting stars, sparkles, warm hopeful lighting, and an encouraging good luck atmosphere",
+      generatePrompt: "Golden shooting stars across a twilight sky with sparkles, four-leaf clover, warm hopeful lighting, and encouraging good luck atmosphere",
+    },
+    {
+      id: "fresh-horizons",
+      name: "Fresh Horizons",
+      icon: "🌅",
+      editPrompt: "Transform this photo into a fresh sunrise horizons scene with optimistic warm colors and an uplifting good luck wishing atmosphere",
+      generatePrompt: "A fresh sunrise over new horizons with optimistic warm colors, open road ahead, bright sky, and uplifting good luck wishing atmosphere",
+    },
+    {
+      id: "lucky-charm",
+      name: "Lucky Charm",
+      icon: "🍀",
+      editPrompt: "Transform this photo with lucky charm elements like four-leaf clovers, golden horseshoes, cheerful colors, and a whimsical good luck atmosphere",
+      generatePrompt: "A whimsical good luck scene with four-leaf clovers, golden horseshoe, rainbow, cheerful bright colors, and encouraging lucky charm atmosphere",
+    },
+  ],
+  "miss-you": [
+    {
+      id: "twilight-dreamy",
+      name: "Twilight Dreamy",
+      icon: "🌙",
+      editPrompt: "Transform this photo into a dreamy twilight scene with soft purple and blue tones, gentle stars, and a tender missing-you atmosphere",
+      generatePrompt: "A dreamy twilight scene with soft purple and blue tones, gentle stars, a solitary bench overlooking water, tender missing-you atmosphere",
+    },
+    {
+      id: "vintage-memory",
+      name: "Vintage Memory",
+      icon: "📸",
+      editPrompt: "Transform this photo into a nostalgic vintage memory style with warm faded tones, soft vignette, and a sentimental missing-you atmosphere",
+      generatePrompt: "A nostalgic vintage photograph style with warm faded tones, old photo album, pressed flowers, and sentimental missing-you atmosphere",
+    },
+    {
+      id: "distant-horizons",
+      name: "Distant Horizons",
+      icon: "🌊",
+      editPrompt: "Transform this photo into a distant horizons scene with vast ocean or landscape, warm sunset light, and a longing missing-you atmosphere",
+      generatePrompt: "A distant ocean horizon with warm sunset light, gentle waves, a message in a bottle on the shore, longing missing-you atmosphere",
+    },
+  ],
+  sorry: [
+    {
+      id: "gentle-peace",
+      name: "Gentle Peace",
+      icon: "🕊️",
+      editPrompt: "Transform this photo into a gentle peaceful scene with soft muted tones, white dove, olive branch, and a sincere apologetic atmosphere",
+      generatePrompt: "A gentle peaceful scene with a white dove carrying an olive branch, soft muted tones, delicate flowers, sincere apologetic atmosphere",
+    },
+    {
+      id: "soft-rain",
+      name: "After the Rain",
+      icon: "🌈",
+      editPrompt: "Transform this photo into an after-the-rain scene with a rainbow, fresh raindrops on flowers, and a hopeful reconciliation atmosphere",
+      generatePrompt: "A beautiful rainbow after rain with fresh raindrops on flowers, clearing sky, renewed hope, gentle reconciliation and sorry atmosphere",
+    },
+    {
+      id: "heartfelt-blooms",
+      name: "Heartfelt Blooms",
+      icon: "💐",
+      editPrompt: "Transform this photo with a heartfelt bouquet of soft flowers, gentle warm tones, and a sincere apologetic atmosphere",
+      generatePrompt: "A heartfelt bouquet of soft pink and white flowers with gentle warm tones, a handwritten note, sincere and apologetic atmosphere",
+    },
+  ],
+  custom: [
+    {
+      id: "elegant",
+      name: "Elegant",
+      icon: "✨",
+      editPrompt: "Transform this photo into an elegant refined style with warm golden lighting, sophisticated composition, and a premium celebratory atmosphere",
+      generatePrompt: "An elegant refined celebration scene with warm golden lighting, sophisticated floral arrangements, and a premium celebratory atmosphere",
+    },
+    {
+      id: "whimsical",
+      name: "Whimsical",
+      icon: "🎨",
+      editPrompt: "Transform this photo into a whimsical illustrated style with playful colors, creative artistic elements, and a cheerful fun atmosphere",
+      generatePrompt: "A whimsical illustrated scene with playful colors, creative artistic elements, floating bubbles, confetti, and cheerful fun atmosphere",
+    },
+    {
+      id: "minimalist",
+      name: "Minimalist",
+      icon: "◻️",
+      editPrompt: "Transform this photo into a clean minimalist style with soft neutral tones, simple elegant composition, and a refined understated atmosphere",
+      generatePrompt: "A clean minimalist design with soft neutral tones, simple elegant floral arrangement, plenty of white space, and refined understated atmosphere",
+    },
+    {
+      id: "vintage",
+      name: "Vintage",
+      icon: "📸",
+      editPrompt: "Transform this photo into a warm vintage style with nostalgic film tones, gentle grain, classic composition, and a timeless sentimental atmosphere",
+      generatePrompt: "A warm vintage scene with nostalgic film tones, gentle grain, classic roses in a vase, soft sunlight through a window, timeless atmosphere",
+    },
+  ],
 };
 
 // ─── Example Card Designs (per occasion) ──────────────────────────────
@@ -515,6 +930,397 @@ export const OCCASION_EXAMPLES: Record<OccasionKey, ExampleCard[]> = {
       description: "Intertwined hearts with roses",
       thumbnailUrl: "/examples/anniversary-hearts.webp",
       prompt: "Two hearts intertwined with red roses and golden decorations, timeless love anniversary celebration, warm romantic atmosphere",
+    },
+  ],
+  "mothers-day": [
+    {
+      id: "mothersday-bouquet",
+      label: "Flower Bouquet",
+      description: "Beautiful spring bouquet for Mom",
+      thumbnailUrl: "/examples/mothersday-bouquet.webp",
+      prompt: "A stunning bouquet of pink roses, peonies and spring flowers wrapped with a ribbon, warm soft lighting, loving Mother's Day atmosphere",
+    },
+    {
+      id: "mothersday-garden",
+      label: "Mother's Garden",
+      description: "Serene garden with blooming flowers",
+      thumbnailUrl: "/examples/mothersday-garden.webp",
+      prompt: "A serene mother's garden with blooming roses, tulips and lavender, garden bench with a sun hat, warm golden sunlight, peaceful Mother's Day atmosphere",
+    },
+    {
+      id: "mothersday-tea",
+      label: "Tea & Flowers",
+      description: "Elegant tea setting with flowers",
+      thumbnailUrl: "/examples/mothersday-tea.webp",
+      prompt: "An elegant tea setting with fine china, fresh flowers, pastries, and warm golden morning light, sophisticated and loving Mother's Day atmosphere",
+    },
+  ],
+  "fathers-day": [
+    {
+      id: "fathersday-study",
+      label: "Dad's Study",
+      description: "Classic gentleman's study",
+      thumbnailUrl: "/examples/fathersday-study.webp",
+      prompt: "A classic gentleman's study with leather-bound books, a fine pocket watch, warm desk lamp, and distinguished refined Father's Day atmosphere",
+    },
+    {
+      id: "fathersday-outdoors",
+      label: "Great Outdoors",
+      description: "Scenic nature adventure",
+      thumbnailUrl: "/examples/fathersday-outdoors.webp",
+      prompt: "A scenic mountain landscape with a lake at golden hour, fishing rod and tackle box, outdoor adventure, warm Father's Day atmosphere",
+    },
+    {
+      id: "fathersday-tools",
+      label: "Dad's Workshop",
+      description: "Rustic workshop scene",
+      thumbnailUrl: "/examples/fathersday-tools.webp",
+      prompt: "A rustic woodworking workshop with warm lighting, quality tools on a workbench, sawdust and craftsmanship, heartfelt Father's Day atmosphere",
+    },
+  ],
+  graduation: [
+    {
+      id: "grad-cap",
+      label: "Cap & Diploma",
+      description: "Classic graduation symbols",
+      thumbnailUrl: "/examples/grad-cap.webp",
+      prompt: "A graduation mortarboard cap and rolled diploma with golden tassel, confetti and streamers, triumphant academic achievement celebration atmosphere",
+    },
+    {
+      id: "grad-celebration",
+      label: "Celebration",
+      description: "Joyful cap toss moment",
+      thumbnailUrl: "/examples/grad-celebration.webp",
+      prompt: "Graduation caps tossed in the air against a bright blue sky, confetti falling, joyful celebration of academic achievement atmosphere",
+    },
+    {
+      id: "grad-future",
+      label: "Bright Future",
+      description: "Sunrise over new horizons",
+      thumbnailUrl: "/examples/grad-future.webp",
+      prompt: "A beautiful sunrise over an open road stretching toward the horizon, golden light, a bright future ahead, inspiring graduation atmosphere",
+    },
+  ],
+  "new-home": [
+    {
+      id: "newhome-key",
+      label: "Golden Key",
+      description: "Key to your new home",
+      thumbnailUrl: "/examples/newhome-key.webp",
+      prompt: "A golden house key with a ribbon bow in front of a beautiful home's front door, flowers and welcome mat, celebratory new home atmosphere",
+    },
+    {
+      id: "newhome-cottage",
+      label: "Dream Cottage",
+      description: "Charming home with garden",
+      thumbnailUrl: "/examples/newhome-cottage.webp",
+      prompt: "A charming cottage with a flowering garden, white picket fence, warm glowing windows at dusk, welcoming new home housewarming atmosphere",
+    },
+    {
+      id: "newhome-interior",
+      label: "Cozy Living Room",
+      description: "Warm welcoming interior",
+      thumbnailUrl: "/examples/newhome-interior.webp",
+      prompt: "A cozy living room with warm fireplace, comfortable sofa, fresh flowers, soft lighting, welcoming and warm new home housewarming atmosphere",
+    },
+  ],
+  "new-job": [
+    {
+      id: "newjob-desk",
+      label: "Fresh Start",
+      description: "New desk, new beginnings",
+      thumbnailUrl: "/examples/newjob-desk.webp",
+      prompt: "A fresh modern desk setup with a city view, coffee cup, notebook, and fresh flowers, optimistic morning light, exciting new job atmosphere",
+    },
+    {
+      id: "newjob-skyline",
+      label: "City Skyline",
+      description: "New opportunities ahead",
+      thumbnailUrl: "/examples/newjob-skyline.webp",
+      prompt: "A stunning city skyline at sunrise with golden light, new opportunities ahead, confident and exciting new career beginning atmosphere",
+    },
+    {
+      id: "newjob-celebration",
+      label: "Celebration Toast",
+      description: "Cheers to the new role",
+      thumbnailUrl: "/examples/newjob-celebration.webp",
+      prompt: "A celebration toast with confetti and champagne glasses, bright colorful streamers, congratulatory new job achievement atmosphere",
+    },
+  ],
+  retirement: [
+    {
+      id: "retirement-sunset",
+      label: "Golden Sunset",
+      description: "Peaceful sunset scene",
+      thumbnailUrl: "/examples/retirement-sunset.webp",
+      prompt: "A peaceful golden sunset over a calm ocean, a sailboat on gentle waves, warm amber tones, serene and celebratory retirement atmosphere",
+    },
+    {
+      id: "retirement-garden",
+      label: "Garden Paradise",
+      description: "Relaxing garden retreat",
+      thumbnailUrl: "/examples/retirement-garden.webp",
+      prompt: "A beautiful garden retreat with blooming flowers, a comfortable bench under a tree, birds singing, peaceful retirement paradise atmosphere",
+    },
+    {
+      id: "retirement-toast",
+      label: "Elegant Toast",
+      description: "Distinguished celebration",
+      thumbnailUrl: "/examples/retirement-toast.webp",
+      prompt: "An elegant retirement celebration with champagne, golden accents, refined floral arrangements, warm lighting, distinguished achievement atmosphere",
+    },
+  ],
+  engagement: [
+    {
+      id: "engagement-ring",
+      label: "Diamond Ring",
+      description: "Sparkling engagement ring",
+      thumbnailUrl: "/examples/engagement-ring.webp",
+      prompt: "A sparkling diamond engagement ring on a bed of rose petals, soft bokeh lights, romantic champagne nearby, enchanting engagement atmosphere",
+    },
+    {
+      id: "engagement-roses",
+      label: "Romantic Roses",
+      description: "Roses and champagne",
+      thumbnailUrl: "/examples/engagement-roses.webp",
+      prompt: "Beautiful red roses with champagne and a diamond ring, romantic pink and gold lighting, enchanting engagement celebration atmosphere",
+    },
+    {
+      id: "engagement-sunset",
+      label: "Sunset Proposal",
+      description: "Romantic sunset moment",
+      thumbnailUrl: "/examples/engagement-sunset.webp",
+      prompt: "A romantic sunset scene with golden light, two silhouettes overlooking the ocean, dreamy and passionate engagement proposal atmosphere",
+    },
+  ],
+  "new-baby": [
+    {
+      id: "newbaby-crib",
+      label: "Sweet Crib",
+      description: "Adorable nursery scene",
+      thumbnailUrl: "/examples/newbaby-crib.webp",
+      prompt: "An adorable nursery with a beautiful crib, soft pastel colors, gentle star mobile, plush toys, warm loving new baby welcome atmosphere",
+    },
+    {
+      id: "newbaby-feet",
+      label: "Tiny Feet",
+      description: "Precious baby details",
+      thumbnailUrl: "/examples/newbaby-feet.webp",
+      prompt: "Tiny baby booties and a soft blanket with gentle pastel flowers, warm soft lighting, precious and tender new baby welcome atmosphere",
+    },
+    {
+      id: "newbaby-stork",
+      label: "Special Delivery",
+      description: "Stork with baby bundle",
+      thumbnailUrl: "/examples/newbaby-stork.webp",
+      prompt: "A whimsical illustration of a stork delivering a baby bundle through a dreamy pastel sky, gentle clouds, heartwarming new baby atmosphere",
+    },
+  ],
+  easter: [
+    {
+      id: "easter-eggs",
+      label: "Easter Eggs",
+      description: "Decorated eggs in a basket",
+      thumbnailUrl: "/examples/easter-eggs.webp",
+      prompt: "Beautifully decorated Easter eggs in a woven basket with spring flowers, soft pastel colors, fresh dewy grass, cheerful Easter atmosphere",
+    },
+    {
+      id: "easter-bunny",
+      label: "Easter Bunny",
+      description: "Cute bunny in garden",
+      thumbnailUrl: "/examples/easter-bunny.webp",
+      prompt: "A cute fluffy Easter bunny in a blooming spring garden with decorated eggs, colorful flowers, sunshine, whimsical Easter atmosphere",
+    },
+    {
+      id: "easter-spring",
+      label: "Spring Bloom",
+      description: "Beautiful spring flowers",
+      thumbnailUrl: "/examples/easter-spring.webp",
+      prompt: "Beautiful spring flowers blooming with cherry blossoms, tulips, daffodils, butterflies, and bright cheerful Easter spring atmosphere",
+    },
+  ],
+  "new-year": [
+    {
+      id: "newyear-fireworks",
+      label: "Midnight Fireworks",
+      description: "Spectacular celebration",
+      thumbnailUrl: "/examples/newyear-fireworks.webp",
+      prompt: "Spectacular midnight fireworks over a city skyline, golden and colorful bursts, New Year's Eve celebration atmosphere, festive and exciting",
+    },
+    {
+      id: "newyear-champagne",
+      label: "Champagne Toast",
+      description: "Elegant midnight toast",
+      thumbnailUrl: "/examples/newyear-champagne.webp",
+      prompt: "An elegant champagne toast at midnight with golden bubbles, clock striking twelve, sparklers, glamorous New Year's Eve celebration atmosphere",
+    },
+    {
+      id: "newyear-countdown",
+      label: "Golden Clock",
+      description: "Countdown to midnight",
+      thumbnailUrl: "/examples/newyear-countdown.webp",
+      prompt: "A vintage golden clock approaching midnight with golden confetti, champagne, festive decorations, exciting New Year countdown atmosphere",
+    },
+  ],
+  halloween: [
+    {
+      id: "halloween-pumpkins",
+      label: "Jack-o-Lanterns",
+      description: "Glowing carved pumpkins",
+      thumbnailUrl: "/examples/halloween-pumpkins.webp",
+      prompt: "Glowing jack-o-lanterns on a porch with autumn leaves, candle light, mysterious foggy evening, fun spooky Halloween atmosphere",
+    },
+    {
+      id: "halloween-haunted",
+      label: "Haunted House",
+      description: "Spooky mansion at night",
+      thumbnailUrl: "/examples/halloween-haunted.webp",
+      prompt: "A spooky haunted mansion under a full moon with bats flying, atmospheric fog, bare trees, enchantingly mysterious Halloween atmosphere",
+    },
+    {
+      id: "halloween-treats",
+      label: "Trick or Treat",
+      description: "Candy and costumes fun",
+      thumbnailUrl: "/examples/halloween-treats.webp",
+      prompt: "A fun Halloween trick-or-treat scene with candy, pumpkin bucket, autumn decorations, colorful leaves, festive and playful Halloween atmosphere",
+    },
+  ],
+  thanksgiving: [
+    {
+      id: "thanksgiving-feast",
+      label: "Family Feast",
+      description: "Beautiful harvest table",
+      thumbnailUrl: "/examples/thanksgiving-feast.webp",
+      prompt: "A beautiful Thanksgiving feast table with roasted turkey, autumn decorations, pumpkins, candles, warm golden lighting, grateful atmosphere",
+    },
+    {
+      id: "thanksgiving-harvest",
+      label: "Autumn Harvest",
+      description: "Cornucopia of plenty",
+      thumbnailUrl: "/examples/thanksgiving-harvest.webp",
+      prompt: "An abundant autumn harvest cornucopia with fruits, vegetables, golden wheat, fall leaves, warm amber tones, grateful Thanksgiving atmosphere",
+    },
+    {
+      id: "thanksgiving-pumpkins",
+      label: "Pumpkin Patch",
+      description: "Rustic pumpkin scene",
+      thumbnailUrl: "/examples/thanksgiving-pumpkins.webp",
+      prompt: "A rustic pumpkin patch with colorful autumn leaves, hay bales, warm golden sunset light, cozy and grateful Thanksgiving atmosphere",
+    },
+  ],
+  "thinking-of-you": [
+    {
+      id: "thinking-flowers",
+      label: "Gentle Wildflowers",
+      description: "Soft wildflower meadow",
+      thumbnailUrl: "/examples/thinking-flowers.webp",
+      prompt: "Soft wildflowers in a gentle meadow with warm sunlight, butterflies, peaceful and calming, warm thoughtful thinking-of-you atmosphere",
+    },
+    {
+      id: "thinking-window",
+      label: "Window Moment",
+      description: "Cozy window scene",
+      thumbnailUrl: "/examples/thinking-window.webp",
+      prompt: "A cozy window scene with a cup of tea, rain gently falling outside, warm blanket, fresh flowers, caring thinking-of-you atmosphere",
+    },
+    {
+      id: "thinking-stars",
+      label: "Under the Stars",
+      description: "Peaceful starlit scene",
+      thumbnailUrl: "/examples/thinking-stars.webp",
+      prompt: "A peaceful scene under a starlit sky with soft moonlight, a gentle meadow, fireflies, warm and reflective thinking-of-you atmosphere",
+    },
+  ],
+  "good-luck": [
+    {
+      id: "goodluck-clover",
+      label: "Lucky Clover",
+      description: "Four-leaf clover charm",
+      thumbnailUrl: "/examples/goodluck-clover.webp",
+      prompt: "A beautiful four-leaf clover with golden sparkles, dewy morning light, fresh green meadow, lucky charm and encouraging good luck atmosphere",
+    },
+    {
+      id: "goodluck-sunrise",
+      label: "New Dawn",
+      description: "Hopeful sunrise ahead",
+      thumbnailUrl: "/examples/goodluck-sunrise.webp",
+      prompt: "A hopeful sunrise over a beautiful landscape, golden light illuminating the path ahead, birds in flight, encouraging good luck atmosphere",
+    },
+    {
+      id: "goodluck-stars",
+      label: "Wishing Stars",
+      description: "Shooting stars in the sky",
+      thumbnailUrl: "/examples/goodluck-stars.webp",
+      prompt: "Golden shooting stars across a twilight sky, magical sparkles, wishes coming true, hopeful and encouraging good luck atmosphere",
+    },
+  ],
+  "miss-you": [
+    {
+      id: "missyou-moon",
+      label: "Same Moon",
+      description: "Under the same moonlight",
+      thumbnailUrl: "/examples/missyou-moon.webp",
+      prompt: "A beautiful full moon over calm water with soft reflections, gentle twilight, two distant shores connected by moonlight, tender missing-you atmosphere",
+    },
+    {
+      id: "missyou-letter",
+      label: "Love Letter",
+      description: "Heartfelt written words",
+      thumbnailUrl: "/examples/missyou-letter.webp",
+      prompt: "A handwritten love letter with pressed flowers, vintage pen, warm candlelight, nostalgic and tender missing-you atmosphere",
+    },
+    {
+      id: "missyou-sunset",
+      label: "Distant Sunset",
+      description: "Sunset over the horizon",
+      thumbnailUrl: "/examples/missyou-sunset.webp",
+      prompt: "A warm sunset over a distant horizon with gentle clouds, a solitary tree silhouette, warm amber light, longing missing-you atmosphere",
+    },
+  ],
+  sorry: [
+    {
+      id: "sorry-dove",
+      label: "Peace Dove",
+      description: "Gentle white dove",
+      thumbnailUrl: "/examples/sorry-dove.webp",
+      prompt: "A gentle white dove carrying an olive branch, soft muted tones, delicate flowers, peaceful sky, sincere apologetic atmosphere",
+    },
+    {
+      id: "sorry-rainbow",
+      label: "After the Storm",
+      description: "Rainbow of hope",
+      thumbnailUrl: "/examples/sorry-rainbow.webp",
+      prompt: "A beautiful rainbow appearing after rain with fresh raindrops on flowers, clearing clouds, renewed hope, gentle reconciliation atmosphere",
+    },
+    {
+      id: "sorry-flowers",
+      label: "Gentle Bouquet",
+      description: "Soft apology flowers",
+      thumbnailUrl: "/examples/sorry-flowers.webp",
+      prompt: "A gentle bouquet of soft pink and white flowers with a heartfelt note, warm soft lighting, sincere and tender apology atmosphere",
+    },
+  ],
+  custom: [
+    {
+      id: "custom-elegant",
+      label: "Elegant Floral",
+      description: "Sophisticated flower arrangement",
+      thumbnailUrl: "/examples/custom-elegant.webp",
+      prompt: "An elegant sophisticated floral arrangement with warm golden lighting, refined composition, beautiful mixed flowers, premium celebration atmosphere",
+    },
+    {
+      id: "custom-whimsical",
+      label: "Whimsical Fun",
+      description: "Playful artistic design",
+      thumbnailUrl: "/examples/custom-whimsical.webp",
+      prompt: "A whimsical playful scene with colorful confetti, balloons, sparkles, creative artistic elements, cheerful and fun celebration atmosphere",
+    },
+    {
+      id: "custom-nature",
+      label: "Nature Scene",
+      description: "Beautiful natural landscape",
+      thumbnailUrl: "/examples/custom-nature.webp",
+      prompt: "A beautiful natural landscape with soft golden light, blooming wildflowers, gentle stream, peaceful and heartfelt nature atmosphere",
     },
   ],
 };
@@ -808,5 +1614,353 @@ export const OCCASIONS: OccasionInfo[] = [
       accent: "#FF69B4",
       background: "#FFF5F5",
     },
+  },
+  {
+    name: "Mother's Day",
+    slug: "mothers-day",
+    icon: "💐",
+    description: "Celebrate the best mom",
+    defaultParticles: "hearts",
+    defaultMusicPrompt: "Warm, loving acoustic music, gentle and heartfelt, tender and beautiful",
+    suggestedImagePrompts: [
+      "A stunning bouquet of pink roses and peonies with warm soft lighting, loving atmosphere",
+      "A serene garden with blooming flowers, a sun hat on a bench, peaceful Mother's Day",
+      "An elegant tea setting with fine china, flowers, and warm morning light",
+    ],
+    colorScheme: {
+      primary: "#E8A0BF",
+      secondary: "#F5D0E0",
+      accent: "#C9699E",
+      background: "#FFF5F9",
+    },
+  },
+  {
+    name: "Father's Day",
+    slug: "fathers-day",
+    icon: "👔",
+    description: "Honor an amazing dad",
+    defaultParticles: "confetti",
+    defaultMusicPrompt: "Warm, sophisticated jazz music, distinguished and heartfelt, classic and refined",
+    suggestedImagePrompts: [
+      "A classic gentleman's study with leather books and a pocket watch, warm refined atmosphere",
+      "A scenic mountain landscape with a lake at golden hour, outdoor adventure",
+      "A rustic woodworking workshop with warm lighting and quality tools",
+    ],
+    colorScheme: {
+      primary: "#2C3E6B",
+      secondary: "#4A6FA5",
+      accent: "#C9A96E",
+      background: "#F5F7FA",
+    },
+  },
+  {
+    name: "Graduation",
+    slug: "graduation",
+    icon: "🎓",
+    description: "Celebrate their achievement",
+    defaultParticles: "confetti",
+    defaultMusicPrompt: "Triumphant orchestral music, proud and uplifting, celebratory fanfare",
+    suggestedImagePrompts: [
+      "Graduation cap and diploma with golden confetti, triumphant achievement celebration",
+      "Caps tossed in the air against a bright blue sky, joyful graduation celebration",
+      "A sunrise over an open road, bright future ahead, inspiring graduation moment",
+    ],
+    colorScheme: {
+      primary: "#1A2744",
+      secondary: "#3D5A99",
+      accent: "#FFD700",
+      background: "#F5F6FA",
+    },
+  },
+  {
+    name: "New Home",
+    slug: "new-home",
+    icon: "🏡",
+    description: "Welcome to their new place",
+    defaultParticles: "confetti",
+    defaultMusicPrompt: "Warm, cheerful acoustic music, welcoming and homey, light and happy",
+    suggestedImagePrompts: [
+      "A golden house key with a ribbon in front of a beautiful home's front door",
+      "A charming cottage with a flowering garden and warm glowing windows at dusk",
+      "A cozy living room with a fireplace, comfortable sofa, and fresh flowers",
+    ],
+    colorScheme: {
+      primary: "#5B8C5A",
+      secondary: "#A8D5A2",
+      accent: "#C9A96E",
+      background: "#F5FAF5",
+    },
+  },
+  {
+    name: "New Job",
+    slug: "new-job",
+    icon: "💼",
+    description: "Cheers to their new role",
+    defaultParticles: "stars",
+    defaultMusicPrompt: "Upbeat, confident pop music, energetic and motivating, fresh start vibes",
+    suggestedImagePrompts: [
+      "A fresh modern desk setup with a city view, coffee, and morning light",
+      "A stunning city skyline at sunrise with golden light and new opportunities",
+      "A celebration toast with confetti and champagne, new job congratulations",
+    ],
+    colorScheme: {
+      primary: "#1A7A6D",
+      secondary: "#7FCEC5",
+      accent: "#FFD700",
+      background: "#F2FAF8",
+    },
+  },
+  {
+    name: "Retirement",
+    slug: "retirement",
+    icon: "🌅",
+    description: "Celebrate a life's work",
+    defaultParticles: "gold-confetti",
+    defaultMusicPrompt: "Smooth, relaxing jazz music, celebratory and mellow, warm saxophone",
+    suggestedImagePrompts: [
+      "A golden sunset over a calm ocean with a sailboat, peaceful retirement",
+      "A beautiful garden retreat with a bench under a tree, relaxing paradise",
+      "An elegant celebration with champagne and golden accents, distinguished achievement",
+    ],
+    colorScheme: {
+      primary: "#D4760A",
+      secondary: "#F5C16C",
+      accent: "#8B4513",
+      background: "#FFFAF0",
+    },
+  },
+  {
+    name: "Engagement",
+    slug: "engagement",
+    icon: "💎",
+    description: "They said yes!",
+    defaultParticles: "hearts-sparkle",
+    defaultMusicPrompt: "Romantic, enchanting music, sparkling and joyful, love and excitement",
+    suggestedImagePrompts: [
+      "A sparkling diamond ring on rose petals with soft bokeh lights",
+      "Beautiful roses with champagne and a diamond ring, romantic engagement",
+      "A romantic sunset with two silhouettes, dreamy engagement proposal",
+    ],
+    colorScheme: {
+      primary: "#D4A574",
+      secondary: "#F5E0CC",
+      accent: "#E8B4B8",
+      background: "#FFF8F5",
+    },
+  },
+  {
+    name: "New Baby",
+    slug: "new-baby",
+    icon: "🍼",
+    description: "Welcome the little one",
+    defaultParticles: "bubbles",
+    defaultMusicPrompt: "Gentle, sweet lullaby music, tender and loving, warm and soothing",
+    suggestedImagePrompts: [
+      "An adorable nursery with a crib, soft pastel colors, and a star mobile",
+      "Tiny baby booties and a soft blanket with pastel flowers, warm lighting",
+      "A stork delivering a baby bundle through a dreamy pastel sky",
+    ],
+    colorScheme: {
+      primary: "#B8D4E3",
+      secondary: "#F5D5E0",
+      accent: "#E8E0A6",
+      background: "#F8FBFF",
+    },
+  },
+  {
+    name: "Easter",
+    slug: "easter",
+    icon: "🐣",
+    description: "Happy Easter wishes",
+    defaultParticles: "butterflies",
+    defaultMusicPrompt: "Light, cheerful spring music, gentle and uplifting, pastoral and bright",
+    suggestedImagePrompts: [
+      "Decorated Easter eggs in a basket with spring flowers, pastel colors",
+      "A cute Easter bunny in a blooming spring garden with colorful eggs",
+      "Beautiful spring flowers blooming with cherry blossoms and butterflies",
+    ],
+    colorScheme: {
+      primary: "#9ED2BE",
+      secondary: "#F5C6D0",
+      accent: "#E8D35A",
+      background: "#F8FFF5",
+    },
+  },
+  {
+    name: "New Year",
+    slug: "new-year",
+    icon: "🎆",
+    description: "Ring in the new year",
+    defaultParticles: "gold-confetti",
+    defaultMusicPrompt: "Energetic, celebratory dance music, exciting countdown vibes, festive",
+    suggestedImagePrompts: [
+      "Spectacular midnight fireworks over a city skyline, colorful celebration",
+      "An elegant champagne toast at midnight with sparklers and golden bubbles",
+      "A vintage golden clock approaching midnight with confetti and decorations",
+    ],
+    colorScheme: {
+      primary: "#1A1A3E",
+      secondary: "#3D3D7A",
+      accent: "#FFD700",
+      background: "#F5F5FF",
+    },
+  },
+  {
+    name: "Halloween",
+    slug: "halloween",
+    icon: "🎃",
+    description: "Spooky season greetings",
+    defaultParticles: "confetti",
+    defaultMusicPrompt: "Playfully spooky music, mysterious and fun, quirky Halloween vibes",
+    suggestedImagePrompts: [
+      "Glowing jack-o-lanterns on a porch with autumn leaves and candlelight",
+      "A spooky haunted mansion under a full moon with bats and fog",
+      "Fun Halloween trick-or-treat scene with candy and autumn decorations",
+    ],
+    colorScheme: {
+      primary: "#E85D04",
+      secondary: "#6A0572",
+      accent: "#FFD700",
+      background: "#FFF5EB",
+    },
+  },
+  {
+    name: "Thanksgiving",
+    slug: "thanksgiving",
+    icon: "🍂",
+    description: "Give thanks and gratitude",
+    defaultParticles: "soft-light",
+    defaultMusicPrompt: "Warm, grateful folk music, cozy and heartfelt, acoustic and wholesome",
+    suggestedImagePrompts: [
+      "A Thanksgiving feast table with autumn decorations, pumpkins, and candles",
+      "An autumn harvest cornucopia with fruits, vegetables, and golden wheat",
+      "A rustic pumpkin patch with fall leaves and warm golden sunset light",
+    ],
+    colorScheme: {
+      primary: "#B85C2F",
+      secondary: "#DBA15A",
+      accent: "#8B4513",
+      background: "#FFF8F0",
+    },
+  },
+  {
+    name: "Thinking of You",
+    slug: "thinking-of-you",
+    icon: "💭",
+    description: "Let them know you care",
+    defaultParticles: "soft-light",
+    defaultMusicPrompt: "Gentle, reflective piano music, calming and thoughtful, warm and caring",
+    suggestedImagePrompts: [
+      "Soft wildflowers in a gentle meadow with warm sunlight and butterflies",
+      "A cozy window scene with tea, rain falling outside, and fresh flowers",
+      "A peaceful starlit sky with soft moonlight and a gentle meadow",
+    ],
+    colorScheme: {
+      primary: "#9B8EC4",
+      secondary: "#D4CEE8",
+      accent: "#B8A0D6",
+      background: "#F8F5FF",
+    },
+  },
+  {
+    name: "Good Luck",
+    slug: "good-luck",
+    icon: "🍀",
+    description: "Wish them the best",
+    defaultParticles: "stars",
+    defaultMusicPrompt: "Uplifting, hopeful music, encouraging and bright, confident and warm",
+    suggestedImagePrompts: [
+      "A four-leaf clover with golden sparkles and dewy morning light",
+      "A hopeful sunrise over a beautiful landscape with golden light",
+      "Shooting stars across a twilight sky with magical sparkles",
+    ],
+    colorScheme: {
+      primary: "#2D8B46",
+      secondary: "#A8D5A2",
+      accent: "#FFD700",
+      background: "#F2FAF5",
+    },
+  },
+  {
+    name: "Missing You",
+    slug: "miss-you",
+    icon: "🌙",
+    description: "Bridge the distance",
+    defaultParticles: "soft-light",
+    defaultMusicPrompt: "Tender, nostalgic music, gentle and emotional, longing piano melody",
+    suggestedImagePrompts: [
+      "A full moon over calm water with soft reflections and gentle twilight",
+      "A handwritten letter with pressed flowers and warm candlelight",
+      "A warm sunset over a distant horizon with gentle clouds",
+    ],
+    colorScheme: {
+      primary: "#4A5D8E",
+      secondary: "#8B9DC3",
+      accent: "#C9A96E",
+      background: "#F5F7FF",
+    },
+  },
+  {
+    name: "Sorry",
+    slug: "sorry",
+    icon: "🕊️",
+    description: "Make things right",
+    defaultParticles: "soft-light",
+    defaultMusicPrompt: "Gentle, sincere piano music, reflective and tender, peaceful and hopeful",
+    suggestedImagePrompts: [
+      "A white dove carrying an olive branch with soft muted tones and flowers",
+      "A rainbow after rain with fresh raindrops on flowers and clearing sky",
+      "A gentle bouquet of soft pink and white flowers with a heartfelt note",
+    ],
+    colorScheme: {
+      primary: "#7E9AA7",
+      secondary: "#B8CDD6",
+      accent: "#A8B8A0",
+      background: "#F5F8FA",
+    },
+  },
+  {
+    name: "Custom Occasion",
+    slug: "custom",
+    icon: "✨",
+    description: "Create your own occasion",
+    defaultParticles: "confetti",
+    defaultMusicPrompt: "Warm, versatile celebratory music, heartfelt and beautiful, elegant",
+    suggestedImagePrompts: [
+      "An elegant floral arrangement with warm golden lighting, premium celebration",
+      "A whimsical scene with colorful confetti, balloons, and sparkles",
+      "A beautiful natural landscape with soft golden light and wildflowers",
+    ],
+    colorScheme: {
+      primary: "#C9A96E",
+      secondary: "#E8DCC8",
+      accent: "#B8956A",
+      background: "#FDFBF7",
+    },
+  },
+];
+
+// ─── Occasion Categories (for grouped display on landing page) ────────
+export interface OccasionCategory {
+  label: string;
+  slugs: OccasionKey[];
+}
+
+export const OCCASION_CATEGORIES: OccasionCategory[] = [
+  {
+    label: "Celebrations",
+    slugs: ["birthday", "congratulations", "graduation", "engagement", "wedding", "anniversary"],
+  },
+  {
+    label: "Family & New Beginnings",
+    slugs: ["mothers-day", "fathers-day", "baby-shower", "new-baby", "new-home", "new-job", "retirement"],
+  },
+  {
+    label: "Holidays",
+    slugs: ["christmas", "valentines", "easter", "new-year", "halloween", "thanksgiving"],
+  },
+  {
+    label: "Heartfelt",
+    slugs: ["thank-you", "get-well", "thinking-of-you", "good-luck", "miss-you", "sorry", "condolences"],
   },
 ];

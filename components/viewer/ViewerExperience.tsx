@@ -11,6 +11,7 @@ import { OCCASIONS } from "@/lib/constants";
 interface CardData {
   slug: string;
   occasion: string;
+  customOccasionName?: string | null;
   recipientName: string;
   senderName: string;
   messageText: string;

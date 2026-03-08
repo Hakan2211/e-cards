@@ -20,16 +20,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "E-card4You - Personalized Digital Greeting Cards",
+  title: "Cardlar - Personalized Digital Greeting Cards",
   description:
-    "Create and send stunning personalized e-cards with AI-generated images, custom messages, voice recordings, and music. The ultimate digital greeting card experience.",
+    "Create and send stunning personalized greeting cards with AI-generated images, custom messages, voice recordings, and music. The ultimate digital card experience.",
   keywords: [
-    "e-card",
+    "cardlar",
     "greeting card",
     "personalized card",
     "digital card",
     "birthday card",
     "wedding card",
+    "e-card",
+    "AI greeting card",
   ],
 };
 

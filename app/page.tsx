@@ -28,7 +28,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-border text-center">
-        <Logo size="sm" className="mb-2 inline-block" />
+        <Logo size="sm" className="mb-2" />
         <p className="text-sm text-muted-foreground">
           Personalized digital greeting cards powered by AI
         </p>
